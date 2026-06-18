@@ -9,6 +9,7 @@ import { Toaster, toast } from "sonner";
 
 const NAV = [
   { id: "dashboard", label: "Dashboard", icon: "layout-dashboard", href: "/admin/dashboard" },
+  { id: "chat", label: "Live Chat", icon: "message-circle", href: "/admin/chat" },
   { id: "pages", label: "Halaman", icon: "file-text", href: "/admin/pages" },
   { id: "media", label: "Media", icon: "image", href: "/admin/media" },
   { id: "theme", label: "Tema", icon: "palette", href: "/admin/theme" },
@@ -16,7 +17,7 @@ const NAV = [
   { id: "services", label: "Layanan", icon: "layout-template", href: "/admin/services" },
   { id: "packages", label: "Paket Harga", icon: "credit-card", href: "/admin/packages" },
   { id: "testimonials", label: "Testimoni", icon: "users", href: "/admin/testimonials" },
-  { id: "faqs", label: "FAQ", icon: "message-circle", href: "/admin/faqs" },
+  { id: "faqs", label: "FAQ", icon: "file-text", href: "/admin/faqs" },
   { id: "recommendations", label: "Rekomendasi", icon: "package", href: "/admin/recommendations" },
   { id: "articles", label: "Artikel", icon: "file-text", href: "/admin/articles" },
   { id: "settings", label: "Pengaturan", icon: "settings", href: "/admin/settings" },
@@ -39,7 +40,27 @@ export default function AdminShell({
 }) {
   const [open, setOpen] = useState(false);
   const [hydrated, setHydrated] = useState(false);
+  const [chatUnread, setChatUnread] = useState(0);
   useEffect(() => setHydrated(true), []);
+
+  // Poll unread chat count for the sidebar badge (every 20s + on focus).
+  useEffect(() => {
+    let active = true;
+    const tick = async () => {
+      try {
+        const r = await fetch("/api/admin/chat/unread", { cache: "no-store" });
+        if (r.ok && active) {
+          const d = (await r.json().catch(() => ({}))) as { unread?: number };
+          setChatUnread(d.unread ?? 0);
+        }
+      } catch {}
+    };
+    tick();
+    const id = setInterval(tick, 20000);
+    const onFocus = () => tick();
+    window.addEventListener("focus", onFocus);
+    return () => { active = false; clearInterval(id); window.removeEventListener("focus", onFocus); };
+  }, []);
 
   const logout = async () => {
     await fetch("/api/admin/logout", { method: "POST" });
@@ -74,7 +95,10 @@ export default function AdminShell({
               )}
             >
               <Icon name={n.icon} size={19} />
-              {n.label}
+              <span className="flex-1">{n.label}</span>
+              {n.id === "chat" && chatUnread > 0 && (
+                <span className="shrink-0 min-w-5 h-5 px-1.5 rounded-full bg-primary text-primary-foreground text-[11px] font-bold flex items-center justify-center">{chatUnread}</span>
+              )}
             </a>
           ))}
         </nav>

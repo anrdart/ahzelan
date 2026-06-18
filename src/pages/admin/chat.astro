@@ -1,0 +1,11 @@
+---
+import AdminLayout from "@/layouts/AdminLayout.astro";
+import AdminChat from "@/components/admin/AdminChat";
+import { listSessions } from "@/lib/chat";
+export const prerender = false;
+
+const sessions = (await listSessions()) as any[];
+---
+<AdminLayout title="Live Chat" currentPath="/admin/chat" crumbs={[{ label: "Admin", href: "/admin/dashboard" }, { label: "Live Chat" }]}>
+  <AdminChat client:load initialSessions={sessions} />
+</AdminLayout>

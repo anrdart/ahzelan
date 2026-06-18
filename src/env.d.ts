@@ -7,6 +7,9 @@ interface ImportMetaEnv {
   readonly PUBLIC_SITE_URL: string;
   readonly PUBLIC_WHATSAPP_NUMBER: string;
   readonly PUBLIC_CONTACT_EMAIL: string;
+  readonly ZAI_API_KEY: string;
+  readonly ZAI_MODEL: string;
+  readonly ZAI_API_URL: string;
 }
 
 interface ImportMeta {
