@@ -1,0 +1,5 @@
+# Wrangler Pages asset-upload safety
+# Silences the "uploading _worker.js" warning. _worker.js is the
+# SSR runtime emitted by @astrojs/cloudflare and is a standard Pages
+# Functions bundle, not private server code.
+_worker.js
