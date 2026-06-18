@@ -1,0 +1,60 @@
+---
+import PublicLayout from "@/layouts/PublicLayout.astro";
+import Icon from "@/components/ui/Icon.astro";
+import { Badge } from "@/components/ui/badge";
+import { FALLBACK_SKILLS } from "@/lib/fallback";
+import { SITE, waLink, BRAND_UNITS } from "@/lib/site";
+---
+<PublicLayout
+  title="Tentang Ahzelan"
+  description="Salam Boss…👋 Aku Ahzelan, digital marketing consultant yang bantu kamu & bisnis tumbuh di era digital."
+  currentPath="/tentang"
+>
+  <section class="py-14">
+    <div class="container-ahz grid lg:grid-cols-[1fr_1.2fr] gap-12 items-center">
+      <div class="rounded-3xl overflow-hidden shadow-lg aspect-[4/5]">
+        <img src="/img/ahzelan-portrait.webp" alt="Ahzelan" class="w-full h-full object-cover" />
+      </div>
+      <div>
+        <Badge variant="soft">Tentang</Badge>
+        <h1 class="mt-4 text-[clamp(30px,4.5vw,46px)] font-extrabold">Halo, aku Ahzelan 👋</h1>
+        <p class="mt-5 text-lg leading-relaxed text-foreground">
+          Aku bantu individu dan bisnis tumbuh di era digital — lewat website, landing page, copywriting, dan strategi marketing yang nggak bikin pusing.
+        </p>
+        <p class="mt-3 text-lg leading-relaxed text-muted-foreground">
+          Prinsipku simpel: ngobrol dulu, kerjain dengan rapi, dan pastiin hasilnya beneran ngebantu bisnis kamu. Santai, tapi serius soal hasil.
+        </p>
+        <p class="mt-3 text-lg leading-relaxed text-muted-foreground">
+          Sudah bantu banyak individu & perusahaan supaya bisa 10X jauh lebih maju di era industri 4.0 dengan digital marketing. Aku habiskan waktu 16 jam sehari buat digital marketing, especially website, copywriting, dan advertising.
+        </p>
+        <div class="flex flex-wrap gap-2.5 my-8">
+          {FALLBACK_SKILLS.map((f) => (
+            <span class="inline-flex items-center gap-1.5 px-3.5 py-2 bg-muted rounded-full font-semibold text-sm font-display">
+              <Icon name={f.icon} size={15} class="text-primary" /> {f.label}
+            </span>
+          ))}
+        </div>
+        <a href={waLink(SITE.whatsapp)} class="inline-flex items-center gap-2 h-12 px-7 rounded-md bg-primary text-primary-foreground font-display font-semibold text-[15px] shadow-brand-sm hover:shadow-brand active:scale-[0.97] transition-all">
+          <Icon name="message-circle" size={18} /> Yuk Ngobrol
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <section class="py-12">
+    <div class="container-ahz">
+      <h2 class="text-[clamp(28px,4vw,40px)] font-extrabold text-center mb-12">Bisnis yang aku urus 🤗</h2>
+      <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-5">
+        {BRAND_UNITS.map((u) => (
+          <a href={u.href} target="_blank" rel="noopener" class="ahz-card-lift block rounded-lg border border-border bg-card p-6">
+            <div class="aspect-video rounded-xl bg-gradient-to-br from-royal-50 to-teal-50 flex items-center justify-center mb-4">
+              <Icon name="link" size={32} class="text-primary" />
+            </div>
+            <h3 class="text-xl font-bold mb-2">{u.name}</h3>
+            <p class="text-muted-foreground text-sm leading-relaxed">{u.desc}</p>
+          </a>
+        ))}
+      </div>
+    </div>
+  </section>
+</PublicLayout>

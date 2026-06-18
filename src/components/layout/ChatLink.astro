@@ -1,0 +1,13 @@
+---
+/**
+ * Inline "Chat Ahzelan" trigger — dispatches the same custom event the
+ * floating button listens to, so anywhere on the site can open the WA dialog.
+ */
+---
+<a
+  href="#"
+  onclick="window.dispatchEvent(new Event('ahz:open-contact')); return false;"
+  class="ahz-chat-link"
+>
+  <slot>Chat Ahzelan</slot>
+</a>

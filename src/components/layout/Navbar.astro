@@ -1,0 +1,85 @@
+---
+/**
+ * Sticky translucent navbar. Mobile menu is a React island (Sheet).
+ * - height 72px, white→blur(12px) on scroll>12
+ * - logo left, links center, CTA right
+ */
+import Icon from "@/components/ui/Icon.astro";
+import MobileNav from "./MobileNav.tsx";
+import { NAV_DEFAULT } from "@/lib/site";
+
+const { currentPath = "/" } = Astro.props as { currentPath?: string };
+const isActive = (href: string) =>
+  href === "/" ? currentPath === "/" : currentPath === href || currentPath.startsWith(href + "/");
+---
+
+<header class="ahz-nav sticky top-0 z-50 border-b border-transparent" data-scrolled="false" id="ahz-navbar">
+  <div class="container-ahz flex items-center justify-between h-[72px]">
+    <a href="/" aria-label="Ahzelan" class="flex items-center shrink-0">
+      <img src="/brand/ahzelan-wordmark.png" alt="Ahzelan" width="120" height="32" class="h-8 w-auto" />
+    </a>
+
+    <nav class="hidden lg:flex items-center gap-1" aria-label="Primary">
+      {NAV_DEFAULT.map((item) =>
+        "children" in item && item.children ? (
+          <div class="relative group">
+            <a
+              href={item.href}
+              class:list={[
+                "inline-flex items-center gap-1 px-3.5 py-2 rounded-lg text-[15px] font-semibold font-display transition-colors",
+                isActive(item.href) ? "text-royal-700 bg-royal-50" : "text-foreground hover:bg-royal-50/60",
+              ]}
+            >
+              {item.label}
+              <Icon name="chevron-down" size={14} class="opacity-70" />
+            </a>
+            <div class="invisible opacity-0 group-hover:visible group-hover:opacity-100 group-focus-within:visible group-focus-within:opacity-100 absolute left-0 top-full pt-2 w-56 transition-all">
+              <div class="rounded-xl border border-border bg-popover p-1.5 shadow-lg">
+                {item.children.map((c) => (
+                  <a
+                    href={c.href}
+                    class="flex items-center gap-2 px-3 py-2 rounded-md text-sm font-medium text-foreground hover:bg-accent hover:text-accent-foreground transition-colors"
+                  >
+                    {c.label}
+                  </a>
+                ))}
+              </div>
+            </div>
+          </div>
+        ) : (
+          <a
+            href={item.href}
+            class:list={[
+              "px-3.5 py-2 rounded-lg text-[15px] font-semibold font-display transition-colors",
+              isActive(item.href) ? "text-royal-700 bg-royal-50" : "text-foreground hover:bg-royal-50/60",
+            ]}
+          >
+            {item.label}
+          </a>
+        ),
+      )}
+    </nav>
+
+    <div class="flex items-center gap-2.5">
+      <a
+        href={`https://wa.me/${import.meta.env.PUBLIC_WHATSAPP_NUMBER || "6285156563313"}`}
+        target="_blank"
+        rel="noopener"
+        class="hidden lg:inline-flex items-center gap-2 h-10 px-4 rounded-md bg-primary text-primary-foreground text-sm font-semibold font-display shadow-brand-sm hover:shadow-brand active:scale-[0.97] transition-all"
+      >
+        <Icon name="message-circle" size={16} /> Chat Ahzelan
+      </a>
+      <MobileNav client:load items={NAV_DEFAULT} currentPath={currentPath} />
+    </div>
+  </div>
+</header>
+
+<script is:inline>
+  (() => {
+    const nav = document.getElementById("ahz-navbar");
+    if (!nav) return;
+    const update = () => nav.setAttribute("data-scrolled", String(window.scrollY > 12));
+    update();
+    window.addEventListener("scroll", update, { passive: true });
+  })();
+</script>

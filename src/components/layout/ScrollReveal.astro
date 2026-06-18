@@ -1,0 +1,23 @@
+---
+/**
+ * ScrollReveal — tiny IntersectionObserver wrapper. Adds `is-visible` to children
+ * with `.ahz-reveal` once they enter the viewport. No JS framework needed.
+ */
+---
+<script is:inline>
+  (() => {
+    if (typeof window === "undefined" || matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+    const io = new IntersectionObserver(
+      (entries) => {
+        for (const e of entries) {
+          if (e.isIntersecting) {
+            e.target.classList.add("is-visible");
+            io.unobserve(e.target);
+          }
+        }
+      },
+      { threshold: 0.12, rootMargin: "0px 0px -8% 0px" },
+    );
+    document.querySelectorAll(".ahz-reveal").forEach((el) => io.observe(el));
+  })();
+</script>

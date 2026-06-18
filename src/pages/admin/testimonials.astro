@@ -1,0 +1,33 @@
+---
+import AdminLayout from "@/layouts/AdminLayout.astro";
+import EntityManager from "@/components/admin/EntityManager";
+import { getAdminClient } from "@/lib/supabase";
+import { FALLBACK_TESTIMONIALS } from "@/lib/fallback";
+export const prerender = false;
+
+const admin = getAdminClient();
+let rows = FALLBACK_TESTIMONIALS as any[];
+if (admin) {
+  const { data } = await admin.from("testimonials").select("*").order("sort_order");
+  if (data) rows = data;
+}
+
+const columns = [
+  { key: "name", label: "Nama", className: "font-display font-semibold" },
+  { key: "role", label: "Role", hideOn: "sm" },
+  { key: "rating", label: "Rating" },
+  { key: "is_visible", label: "Status" },
+];
+const fields = [
+  { type: "text", name: "name", label: "Nama", required: true },
+  { type: "text", name: "role", label: "Role / Pekerjaan" },
+  { type: "text", name: "business_name", label: "Nama Bisnis" },
+  { type: "textarea", name: "quote", label: "Testimoni", required: true },
+  { type: "number", name: "rating", label: "Rating (1-5)" },
+  { type: "number", name: "sort_order", label: "Urutan" },
+  { type: "boolean", name: "is_visible", label: "Tampilkan" },
+];
+---
+<AdminLayout title="Testimoni" currentPath="/admin/testimonials" crumbs={[{ label: "Admin", href: "/admin/dashboard" }, { label: "Testimoni" }]}>
+  <EntityManager client:load title="Testimoni" endpoint="/api/admin/testimonials" rows={rows} columns={columns} searchKeys={["name", "quote"]} fields={fields} />
+</AdminLayout>

@@ -1,0 +1,78 @@
+---
+import Icon from "@/components/ui/Icon.astro";
+import { SITE, SOCIALS, BRAND_UNITS } from "@/lib/site";
+---
+
+<footer class="bg-slate-900 text-slate-400 pt-16 pb-6 mt-24">
+  <div class="container-ahz">
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-10">
+      <div class="lg:col-span-2">
+        <img src="/brand/ahzelan-wordmark-light.png" alt="Ahzelan" class="h-7 w-auto mb-4" />
+        <p class="text-sm leading-relaxed max-w-xs mb-5">
+          {SITE.description}
+        </p>
+        <div class="flex gap-2.5">
+          {[
+            { name: "instagram", href: SOCIALS.instagram.href },
+            { name: "youtube", href: SOCIALS.youtube.href },
+            { name: "send", href: SOCIALS.telegram.href },
+            { name: "mail", href: `mailto:${SITE.email}` },
+          ].map((s) => (
+            <a
+              href={s.href}
+              target="_blank"
+              rel="noopener"
+              aria-label={s.name}
+              class="w-9 h-9 inline-flex items-center justify-center rounded-lg bg-slate-800 text-white hover:bg-primary transition-colors"
+            >
+              <Icon name={s.name} size={17} />
+            </a>
+          ))}
+        </div>
+      </div>
+
+      <div>
+        <div class="font-display font-bold text-white mb-3 text-sm">Layanan</div>
+        <ul class="flex flex-col gap-2.5 text-sm">
+          {BRAND_UNITS.map((u) => (
+            <li>
+              <a href={u.href} target="_blank" rel="noopener" class="hover:text-white transition-colors">{u.name}</a>
+            </li>
+          ))}
+        </ul>
+      </div>
+
+      <div>
+        <div class="font-display font-bold text-white mb-3 text-sm">Jelajahi</div>
+        <ul class="flex flex-col gap-2.5 text-sm">
+          <li><a href="/tentang" class="hover:text-white transition-colors">Tentang</a></li>
+          <li><a href="/layanan" class="hover:text-white transition-colors">Layanan</a></li>
+          <li><a href="/rekomendasi" class="hover:text-white transition-colors">Rekomendasi</a></li>
+          <li><a href="/blog" class="hover:text-white transition-colors">Blog</a></li>
+          <li><a href="/galeri" class="hover:text-white transition-colors">Galeri</a></li>
+          <li><a href="/bio-link" class="hover:text-white transition-colors">Bio Link</a></li>
+        </ul>
+      </div>
+
+      <div>
+        <div class="font-display font-bold text-white mb-3 text-sm">Kontak</div>
+        <ul class="flex flex-col gap-2.5 text-sm">
+          <li class="flex items-start gap-2"><Icon name="message-circle" size={15} class="mt-0.5 text-royal-300 shrink-0" />
+            <a href={`https://wa.me/${SITE.whatsapp}`} target="_blank" rel="noopener" class="hover:text-white transition-colors">{SITE.whatsappDisplay}</a>
+          </li>
+          <li class="flex items-start gap-2"><Icon name="mail" size={15} class="mt-0.5 text-royal-300 shrink-0" />
+            <a href={`mailto:${SITE.email}`} class="hover:text-white transition-colors break-all">{SITE.email}</a>
+          </li>
+          <li class="flex items-start gap-2"><Icon name="map-pin" size={15} class="mt-0.5 text-royal-300 shrink-0" />
+            <span>Indonesia</span>
+          </li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="border-t border-slate-800 mt-12 pt-6 flex flex-col sm:flex-row justify-between gap-3 text-xs">
+      <span>© {SITE.founded} Ahzelan. Dibuat dengan santai di Indonesia.</span>
+      <span>Tumbuh di era digital 🌱</span>
+    </div>
+  </div>
+</footer>

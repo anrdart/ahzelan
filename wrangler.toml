@@ -1,0 +1,21 @@
+name = "ahzelan"
+main = "./dist/_worker.js/index.js"
+compatibility_date = "2025-01-15"
+compatibility_flags = ["nodejs_compat"]
+assets = { directory = "./dist", binding = "ASSETS" }
+
+# Public vars (sent to client). Add sensitive values via:
+#   bunx wrangler secret put SUPABASE_SERVICE_ROLE_KEY
+#   bunx wrangler secret put PUBLIC_SUPABASE_URL
+#   bunx wrangler secret put PUBLIC_SUPABASE_ANON_KEY
+[vars]
+PUBLIC_SITE_URL = "https://ahzelan.com"
+PUBLIC_WHATSAPP_NUMBER = "6285156563313"
+PUBLIC_CONTACT_EMAIL = "salam@ahzelan.com"
+
+# Astro sessions (used by @astrojs/cloudflare). Create with:
+#   bunx wrangler kv namespace create SESSION
+# then paste the id below.
+# [[kv_namespaces]]
+# binding = "SESSION"
+# id = "<your-kv-namespace-id>"

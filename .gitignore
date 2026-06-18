@@ -1,0 +1,14 @@
+node_modules/
+dist/
+.astro/
+.wrangler/
+.dev.vars
+.env
+.env.local
+.env.*.local
+*.log
+.DS_Store
+.gstack/
+
+# Design handoff bundle (not part of the source repo)
+/_design/

@@ -1,0 +1,17 @@
+---
+import AdminLayout from "@/layouts/AdminLayout.astro";
+import ArticleEditor from "@/components/admin/ArticleEditor";
+import { getAdminClient } from "@/lib/supabase";
+import { FALLBACK_ARTICLES } from "@/lib/fallback";
+export const prerender = false;
+
+const admin = getAdminClient();
+let rows = FALLBACK_ARTICLES as any[];
+if (admin) {
+  const { data } = await admin.from("articles").select("*").order("published_at", { ascending: false });
+  if (data) rows = data;
+}
+---
+<AdminLayout title="Artikel" currentPath="/admin/articles" crumbs={[{ label: "Admin", href: "/admin/dashboard" }, { label: "Artikel" }]}>
+  <ArticleEditor client:load initial={rows} />
+</AdminLayout>

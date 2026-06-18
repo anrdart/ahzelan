@@ -1,0 +1,51 @@
+---
+import AdminLayout from "@/layouts/AdminLayout.astro";
+import DashboardOverview from "@/components/admin/DashboardOverview";
+import { getAdminClient, hasSupabase } from "@/lib/supabase";
+export const prerender = false;
+
+const admin = getAdminClient();
+let stats: { label: string; value: string; icon: string; delta: string }[] = [
+  { label: "Halaman", value: "10", icon: "file-text", delta: "Published" },
+  { label: "Media", value: "148", icon: "image", delta: "+12 minggu ini" },
+  { label: "Artikel", value: "32", icon: "file-text", delta: "4 draft" },
+  { label: "FAQ", value: "16", icon: "message-circle", delta: "Semua tampil" },
+];
+let articles: { id: string; title: string; category: string; date: string; status: "Published" | "Draft" }[] = [];
+let activity: { icon: string; text: string; time: string }[] = [
+  { icon: "square-pen", text: "Edit hero homepage", time: "5 menit lalu" },
+  { icon: "image", text: "Upload 3 gambar ke Media", time: "1 jam lalu" },
+  { icon: "palette", text: "Ubah warna primary", time: "3 jam lalu" },
+  { icon: "file-text", text: "Publish artikel baru", time: "Kemarin" },
+];
+
+if (admin) {
+  const [pages, media, art, faq] = await Promise.all([
+    admin.from("pages").select("id", { count: "exact", head: true }).eq("status", "published"),
+    admin.from("media").select("id", { count: "exact", head: true }),
+    admin.from("articles").select("id, title, category, status, published_at", { count: "exact" }).order("published_at", { ascending: false }).limit(5),
+    admin.from("faqs").select("id", { count: "exact", head: true }).eq("is_visible", true),
+  ]);
+  stats = [
+    { label: "Halaman", value: String(pages.count ?? 0), icon: "file-text", delta: "Published" },
+    { label: "Media", value: String(media.count ?? 0), icon: "image", delta: "+0 minggu ini" },
+    { label: "Artikel", value: String(art.count ?? 0), icon: "file-text", delta: `${(art.data ?? []).filter((a: any) => a.status === "draft").length} draft` },
+    { label: "FAQ", value: String(faq.count ?? 0), icon: "message-circle", delta: "Semua tampil" },
+  ];
+  articles = (art.data ?? []).map((a: any) => ({
+    id: a.id, title: a.title, category: a.category,
+    date: a.published_at ? new Date(a.published_at).toLocaleDateString("id-ID", { day: "numeric", month: "short", year: "numeric" }) : "—",
+    status: a.status === "published" ? "Published" : "Draft",
+  }));
+}
+
+const hasDb = hasSupabase;
+---
+<AdminLayout title="Dashboard" currentPath="/admin/dashboard" crumbs={[{ label: "Admin", href: "/admin/dashboard" }, { label: "Dashboard" }]}>
+  {!hasDb && (
+    <div class="mb-6 p-4 rounded-xl border border-amber-200 bg-amber-50 text-amber-600 text-sm">
+      <strong>Mode fallback:</strong> Public Supabase env belum di-set, jadi data di dashboard ini adalah placeholder. Set <code class="font-mono">PUBLIC_SUPABASE_URL</code> + anon key di <code class="font-mono">.env</code> untuk data live.
+    </div>
+  )}
+  <DashboardOverview client:load stats={stats} articles={articles} activity={activity} />
+</AdminLayout>

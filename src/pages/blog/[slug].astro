@@ -1,0 +1,60 @@
+---
+import PublicLayout from "@/layouts/PublicLayout.astro";
+import { Badge } from "@/components/ui/badge";
+import { Breadcrumb } from "@/components/ui/breadcrumb";
+import { getArticleBySlug, getArticles } from "@/lib/db";
+import { SITE } from "@/lib/site";
+
+const { slug } = Astro.params;
+const article = slug ? await getArticleBySlug(Astro.request, Astro.cookies, slug) : null;
+if (!article) return Astro.redirect("/blog");
+
+const all = await getArticles(Astro.request, Astro.cookies);
+const related = all.filter((a) => a.id !== article.id && a.category === article.category).slice(0, 3);
+const fmt = (iso: string) => new Date(iso).toLocaleDateString("id-ID", { day: "numeric", month: "long", year: "numeric" });
+const readingTime = Math.max(1, Math.round(article.content.replace(/<[^>]+>/g, " ").split(/\s+/).length / 200));
+
+const jsonLd = {
+  "@context": "https://schema.org",
+  "@type": "Article",
+  headline: article.title,
+  description: article.excerpt ?? "",
+  datePublished: article.published_at,
+  author: { "@type": "Person", name: "Ahzelan", url: SITE.url },
+  publisher: { "@type": "Organization", name: "Ahzelan", logo: { "@type": "ImageObject", url: new URL("/brand/ahzelan-mark.svg", SITE.url).toString() } },
+  mainEntityOfPage: new URL(`/blog/${article.slug}`, SITE.url).toString(),
+};
+---
+<PublicLayout title={article.title} description={article.excerpt ?? undefined} currentPath={`/blog/${article.slug}`} jsonLd={jsonLd}>
+  <article class="py-12">
+    <div class="container-ahz ahz-prose">
+      <Breadcrumb items={[{ label: "Beranda", href: "/" }, { label: "Blog", href: "/blog" }, { label: article.title }]} />
+      <div class="flex items-center gap-2.5 mt-6 mb-3">
+        <Badge variant="soft">{article.category}</Badge>
+        <span class="text-sm text-muted-foreground">{fmt(article.published_at!)}</span>
+        <span class="text-sm text-muted-foreground">·</span>
+        <span class="text-sm text-muted-foreground">{readingTime} min baca</span>
+      </div>
+      <h1 class="text-[clamp(28px,4.5vw,42px)] font-extrabold leading-tight">{article.title}</h1>
+      {article.excerpt && <p class="text-lg text-muted-foreground mt-4 leading-relaxed">{article.excerpt}</p>}
+      <div class="mt-8" set:html={article.content} />
+    </div>
+  </article>
+
+  {related.length > 0 && (
+    <section class="py-12 border-t border-border">
+      <div class="container-ahz">
+        <h2 class="text-2xl font-extrabold mb-7">Artikel Terkait</h2>
+        <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-5">
+          {related.map((a) => (
+            <a href={`/blog/${a.slug}`} class="ahz-card-lift block rounded-lg border border-border bg-card p-5">
+              <Badge variant="soft">{a.category}</Badge>
+              <h3 class="text-lg font-bold mt-2.5 mb-2 line-clamp-2">{a.title}</h3>
+              <p class="text-sm text-muted-foreground line-clamp-2">{a.excerpt}</p>
+            </a>
+          ))}
+        </div>
+      </div>
+    </section>
+  )}
+</PublicLayout>

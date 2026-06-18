@@ -1,0 +1,57 @@
+---
+import PublicLayout from "@/layouts/PublicLayout.astro";
+import Hero from "@/components/sections/Hero.astro";
+import TrustStrip from "@/components/sections/TrustStrip.astro";
+import Services from "@/components/sections/Services.astro";
+import LandingHighlight from "@/components/sections/LandingHighlight.astro";
+import Process from "@/components/sections/Process.astro";
+import Recommendations from "@/components/sections/Recommendations.astro";
+import Articles from "@/components/sections/Articles.astro";
+import Testimonials from "@/components/sections/Testimonials.astro";
+import FaqSection from "@/components/sections/FaqSection.astro";
+import FinalCta from "@/components/sections/FinalCta.astro";
+import { getServices, getArticles, getRecommendations, getTestimonials, getFaqs } from "@/lib/db";
+import { SITE } from "@/lib/site";
+
+const [services, articles, recommendations, testimonials, faqs] = await Promise.all([
+  getServices(Astro.request, Astro.cookies),
+  getArticles(Astro.request, Astro.cookies, 3),
+  getRecommendations(Astro.request, Astro.cookies),
+  getTestimonials(Astro.request, Astro.cookies),
+  getFaqs(Astro.request, Astro.cookies),
+]);
+
+const jsonLd = {
+  "@context": "https://schema.org",
+  "@type": "Person",
+  name: "Ahzelan",
+  jobTitle: "Digital Marketing Consultant",
+  url: SITE.url,
+  sameAs: [
+    "https://instagram.com/ahzelanx",
+    "https://youtube.com/@ahzelanx",
+    "https://facebook.com/ahzelanx",
+    "https://x.com/ahzelanx",
+    "https://t.me/jadinaonn",
+  ],
+  knowsAbout: ["Digital Marketing", "SEO", "Copywriting", "Web Development", "Landing Page"],
+  contactPoint: {
+    "@type": "ContactPoint",
+    contactType: "customer support",
+    telephone: `+${SITE.whatsapp}`,
+    availableLanguage: ["Indonesian"],
+  },
+};
+---
+<PublicLayout currentPath="/" jsonLd={jsonLd}>
+  <Hero />
+  <div class="mt-2"><TrustStrip /></div>
+  <div class="mt-24"><Services services={services} /></div>
+  <div class="mt-24"><LandingHighlight /></div>
+  <div class="mt-24"><Process /></div>
+  <div class="mt-24"><Recommendations items={recommendations.slice(0, 4)} /></div>
+  <div class="mt-24"><Articles items={articles} /></div>
+  <div class="mt-24"><Testimonials items={testimonials.slice(0, 3)} /></div>
+  <div class="mt-24"><FaqSection items={faqs} /></div>
+  <div class="mt-24 mb-12"><FinalCta /></div>
+</PublicLayout>

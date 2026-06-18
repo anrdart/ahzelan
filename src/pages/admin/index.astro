@@ -1,0 +1,8 @@
+---
+import AdminLayout from "@/layouts/AdminLayout.astro";
+export const prerender = false;
+return Astro.redirect("/admin/dashboard");
+---
+<AdminLayout title="Redirect" currentPath="/admin">
+  <p>Redirecting...</p>
+</AdminLayout>

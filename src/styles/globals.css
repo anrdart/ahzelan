@@ -1,0 +1,393 @@
+@import "tailwindcss";
+@import "tw-animate-css";
+
+@import "@fontsource-variable/plus-jakarta-sans";
+@import "@fontsource-variable/inter";
+
+@custom-variant dark (&:is(.dark *));
+
+/* ============================================================
+   AHZELAN DESIGN TOKENS  (ported from the design system bundle)
+   Brand: Royal Blue #2E4191 (from logo) · Teal secondary · Amber accent
+   ============================================================ */
+:root {
+  /* ---- Primary: Royal Blue (logo ink at 700) ---- */
+  --royal-50: #eef1fa;
+  --royal-100: #dde2f4;
+  --royal-200: #c0caea;
+  --royal-300: #97a6da;
+  --royal-400: #6e80c7;
+  --royal-500: #4f62b3;
+  --royal-600: #3d4f9c;
+  --royal-700: #2e4191; /* logo ink */
+  --royal-800: #283878;
+  --royal-900: #232f61;
+
+  /* ---- Secondary: Teal ---- */
+  --teal-50: #ecfeff;
+  --teal-100: #cffafe;
+  --teal-200: #a5f3fc;
+  --teal-300: #67e8f9;
+  --teal-400: #22d3ee;
+  --teal-500: #06b6d4;
+  --teal-600: #0891b2;
+  --teal-700: #0e7490;
+
+  /* ---- Accent: Amber ---- */
+  --amber-50: #fffbeb;
+  --amber-100: #fef3c7;
+  --amber-200: #fde68a;
+  --amber-400: #fbbf24;
+  --amber-500: #f59e0b;
+  --amber-600: #d97706;
+
+  /* ---- Green: success only ---- */
+  --green-50: #ecfdf5;
+  --green-100: #d1fae5;
+  --green-200: #a7f3d0;
+  --green-500: #10b981;
+  --green-600: #059669;
+  --green-700: #047857;
+
+  /* ---- Neutrals: Slate ---- */
+  --slate-50: #f8fafc;
+  --slate-100: #f1f5f9;
+  --slate-200: #e2e8f0;
+  --slate-300: #cbd5e1;
+  --slate-400: #94a3b8;
+  --slate-500: #64748b;
+  --slate-600: #475569;
+  --slate-700: #334155;
+  --slate-800: #1e293b;
+  --slate-900: #0f172a;
+  --slate-950: #020617;
+
+  /* ---- Brand semantic aliases ---- */
+  --brand-primary: var(--royal-700);
+  --brand-primary-hover: var(--royal-800);
+  --brand-primary-soft: var(--royal-50);
+  --brand-secondary: var(--teal-600);
+  --brand-accent: var(--amber-500);
+  --brand-gradient: linear-gradient(135deg, var(--royal-600) 0%, var(--teal-500) 100%);
+  --brand-gradient-soft: linear-gradient(135deg, var(--royal-50) 0%, var(--teal-50) 100%);
+
+  /* ---- Surfaces / text ---- */
+  --surface-page: var(--slate-50);
+  --surface-card: #ffffff;
+  --surface-sunken: var(--slate-100);
+  --text-body: var(--slate-700);
+  --text-heading: var(--slate-900);
+  --text-muted: var(--slate-500);
+  --ahz-border: var(--slate-200);
+
+  /* ---- Status ---- */
+  --success: var(--green-600);
+  --warning: var(--amber-500);
+  --danger: #e11d48;
+  --info: var(--teal-600);
+
+  /* ---- Typography ---- */
+  --font-display: "Plus Jakarta Sans Variable", ui-sans-serif, system-ui, sans-serif;
+  --font-body: "Inter Variable", ui-sans-serif, system-ui, sans-serif;
+  --font-mono: ui-monospace, "JetBrains Mono", "SF Mono", monospace;
+
+  /* ---- Radius ---- */
+  --radius-xs: 0.375rem;
+  --radius-sm: 0.5rem;
+  --radius-md: 0.75rem;
+  --radius-lg: 1rem;
+  --radius-xl: 1.5rem;
+  --radius-2xl: 2rem;
+  --radius: var(--radius-md);
+
+  /* ---- Layout ---- */
+  --container-max: 1200px;
+  --container-prose: 720px;
+  --section-gap: 6rem; /* 96px */
+
+  /* ---- Shadows ---- */
+  --shadow-xs: 0 1px 2px rgba(15, 23, 42, 0.05);
+  --shadow-sm: 0 1px 3px rgba(15, 23, 42, 0.08), 0 1px 2px rgba(15, 23, 42, 0.04);
+  --shadow-md: 0 4px 12px rgba(15, 23, 42, 0.08), 0 2px 4px rgba(15, 23, 42, 0.04);
+  --shadow-lg: 0 12px 28px rgba(15, 23, 42, 0.1), 0 4px 10px rgba(15, 23, 42, 0.05);
+  --shadow-xl: 0 24px 48px rgba(15, 23, 42, 0.12), 0 8px 16px rgba(15, 23, 42, 0.06);
+  --shadow-brand: 0 8px 24px rgba(46, 65, 145, 0.3);
+  --shadow-brand-sm: 0 4px 12px rgba(46, 65, 145, 0.22);
+
+  /* ---- Motion ---- */
+  --lift: translateY(-3px);
+  --ease-out: cubic-bezier(0.22, 1, 0.36, 1);
+  --dur: 220ms;
+  --dur-fast: 140ms;
+
+  /* ============================================================
+     shadcn/ui semantic vars  → mapped onto Ahzelan brand
+     ============================================================ */
+  --background: #ffffff;
+  --foreground: var(--slate-900);
+  --card: #ffffff;
+  --card-foreground: var(--slate-900);
+  --popover: #ffffff;
+  --popover-foreground: var(--slate-900);
+  --primary: var(--royal-700);
+  --primary-foreground: #ffffff;
+  --secondary: var(--slate-100);
+  --secondary-foreground: var(--slate-800);
+  --muted: var(--slate-100);
+  --muted-foreground: var(--slate-500);
+  --accent: var(--royal-50);
+  --accent-foreground: var(--royal-700);
+  --destructive: #e11d48;
+  --destructive-foreground: #ffffff;
+  --border: var(--slate-200);
+  --input: var(--slate-200);
+  --ring: var(--royal-500);
+  --sidebar: #ffffff;
+  --sidebar-foreground: var(--slate-700);
+  --sidebar-primary: var(--royal-700);
+  --sidebar-primary-foreground: #ffffff;
+  --sidebar-accent: var(--royal-50);
+  --sidebar-accent-foreground: var(--royal-700);
+  --sidebar-border: var(--slate-200);
+  --sidebar-ring: var(--royal-500);
+}
+
+.dark {
+  --background: var(--slate-950);
+  --foreground: var(--slate-50);
+  --card: var(--slate-900);
+  --card-foreground: var(--slate-50);
+  --popover: var(--slate-900);
+  --popover-foreground: var(--slate-50);
+  --primary: var(--royal-400);
+  --primary-foreground: var(--slate-950);
+  --secondary: var(--slate-800);
+  --secondary-foreground: var(--slate-50);
+  --muted: var(--slate-800);
+  --muted-foreground: var(--slate-400);
+  --accent: var(--slate-800);
+  --accent-foreground: var(--slate-50);
+  --border: var(--slate-800);
+  --input: var(--slate-800);
+  --ring: var(--royal-400);
+  --surface-page: var(--slate-950);
+  --surface-card: var(--slate-900);
+  --surface-sunken: var(--slate-800);
+  --text-body: var(--slate-300);
+  --text-heading: var(--slate-50);
+  --text-muted: var(--slate-400);
+  --ahz-border: var(--slate-800);
+  --sidebar: var(--slate-900);
+  --sidebar-foreground: var(--slate-300);
+  --sidebar-border: var(--slate-800);
+}
+
+/* ============================================================
+   Tailwind v4 theme — expose tokens as utilities
+   ============================================================ */
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-destructive: var(--destructive);
+  --color-destructive-foreground: var(--destructive-foreground);
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+  --color-sidebar: var(--sidebar);
+  --color-sidebar-foreground: var(--sidebar-foreground);
+  --color-sidebar-primary: var(--sidebar-primary);
+  --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
+  --color-sidebar-accent: var(--sidebar-accent);
+  --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
+  --color-sidebar-border: var(--sidebar-border);
+  --color-sidebar-ring: var(--sidebar-ring);
+
+  /* brand ramps as Tailwind colors */
+  --color-royal-50: var(--royal-50);
+  --color-royal-100: var(--royal-100);
+  --color-royal-200: var(--royal-200);
+  --color-royal-300: var(--royal-300);
+  --color-royal-400: var(--royal-400);
+  --color-royal-500: var(--royal-500);
+  --color-royal-600: var(--royal-600);
+  --color-royal-700: var(--royal-700);
+  --color-royal-800: var(--royal-800);
+  --color-royal-900: var(--royal-900);
+  --color-teal-50: var(--teal-50);
+  --color-teal-100: var(--teal-100);
+  --color-teal-500: var(--teal-500);
+  --color-teal-600: var(--teal-600);
+  --color-amber-100: var(--amber-100);
+  --color-amber-400: var(--amber-400);
+  --color-amber-500: var(--amber-500);
+  --color-brand: var(--brand-primary);
+  --color-brand-soft: var(--brand-primary-soft);
+
+  --font-sans: var(--font-body);
+  --font-display: var(--font-display);
+  --font-mono: var(--font-mono);
+
+  --radius-sm: var(--radius-sm);
+  --radius-md: var(--radius-md);
+  --radius-lg: var(--radius-lg);
+  --radius-xl: var(--radius-xl);
+  --radius-2xl: var(--radius-2xl);
+
+  --shadow-xs: var(--shadow-xs);
+  --shadow-sm: var(--shadow-sm);
+  --shadow-md: var(--shadow-md);
+  --shadow-lg: var(--shadow-lg);
+  --shadow-xl: var(--shadow-xl);
+  --shadow-brand: var(--shadow-brand);
+
+  --container-max: var(--container-max);
+}
+
+/* ============================================================
+   Base
+   ============================================================ */
+@layer base {
+  * {
+    border-color: var(--border);
+  }
+  html {
+    scroll-behavior: smooth;
+    color-scheme: light;
+  }
+  html.dark {
+    color-scheme: dark;
+  }
+  body {
+    font-family: var(--font-body);
+    color: var(--text-body);
+    background: var(--background);
+    line-height: 1.5;
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+  }
+  h1, h2, h3, h4, h5, h6 {
+    font-family: var(--font-display);
+    color: var(--text-heading);
+    font-weight: 700;
+    line-height: 1.1;
+    letter-spacing: -0.02em;
+    text-wrap: balance;
+  }
+  p {
+    text-wrap: pretty;
+  }
+  ::selection {
+    background: var(--royal-200);
+    color: var(--royal-900);
+  }
+}
+
+/* ============================================================
+   Reusable utilities ported from the kit
+   ============================================================ */
+@utility container-ahz {
+  max-width: var(--container-max);
+  margin-inline: auto;
+  padding-inline: 1.5rem;
+}
+
+.ahz-gradient-text {
+  background: var(--brand-gradient);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+/* Hero floating cards — slow 4.5s float */
+@keyframes ahz-float {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-10px); }
+}
+.ahz-float {
+  animation: ahz-float 4.5s var(--ease-out) infinite;
+}
+.ahz-float:nth-child(2) { animation-delay: 0.6s; }
+.ahz-float:nth-child(3) { animation-delay: 1.2s; }
+.ahz-float:nth-child(4) { animation-delay: 1.8s; }
+
+/* Scroll reveal */
+.ahz-reveal {
+  opacity: 0;
+  transform: translateY(16px);
+  transition: opacity 0.6s var(--ease-out), transform 0.6s var(--ease-out);
+  will-change: opacity, transform;
+}
+.ahz-reveal.is-visible {
+  opacity: 1;
+  transform: none;
+}
+
+/* Lift-on-hover card */
+.ahz-card-lift {
+  transition: transform var(--dur) var(--ease-out), box-shadow var(--dur) var(--ease-out),
+    border-color var(--dur) var(--ease-out);
+}
+.ahz-card-lift:hover {
+  transform: var(--lift);
+  box-shadow: var(--shadow-lg);
+  border-color: var(--royal-200);
+}
+
+/* Sticky navbar blur once scrolled */
+.ahz-nav {
+  transition: all var(--dur) var(--ease-out);
+}
+.ahz-nav[data-scrolled="true"] {
+  background: rgba(255, 255, 255, 0.82);
+  backdrop-filter: saturate(180%) blur(12px);
+  border-bottom: 1px solid var(--ahz-border);
+}
+.dark .ahz-nav[data-scrolled="true"] {
+  background: rgba(15, 23, 42, 0.82);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+    scroll-behavior: auto !important;
+  }
+  .ahz-reveal {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+/* Article prose */
+.ahz-prose {
+  max-width: var(--container-prose);
+  margin-inline: auto;
+}
+.ahz-prose p { margin: 1.1em 0; font-size: 1.0625rem; line-height: 1.75; color: var(--text-body); }
+.ahz-prose h2 { font-size: 1.6rem; margin: 1.8em 0 0.6em; }
+.ahz-prose h3 { font-size: 1.3rem; margin: 1.5em 0 0.5em; }
+.ahz-prose ul, .ahz-prose ol { margin: 1.1em 0; padding-left: 1.4em; }
+.ahz-prose li { margin: 0.4em 0; }
+.ahz-prose a { color: var(--brand-primary); text-decoration: underline; text-underline-offset: 2px; }
+.ahz-prose img { border-radius: var(--radius-lg); margin: 1.6em 0; }
+.ahz-prose blockquote {
+  border-left: 3px solid var(--royal-300);
+  padding-left: 1em;
+  color: var(--text-muted);
+  font-style: italic;
+}

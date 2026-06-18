@@ -1,0 +1,22 @@
+---
+import AdminLayout from "@/layouts/AdminLayout.astro";
+import MediaLibrary from "@/components/admin/MediaLibrary";
+import { getAdminClient, hasSupabase } from "@/lib/supabase";
+export const prerender = false;
+
+const admin = getAdminClient();
+let items: any[] = [
+  { id: "m1", file_name: "ahzelan-portrait.webp", file_url: "/img/ahzelan-portrait.webp", size: 32512 },
+  { id: "m2", file_name: "ahzelan-di-dieng-1.webp", file_url: "/img/ahzelan-di-dieng-1.webp", size: 32512 },
+  { id: "m3", file_name: "naon.webp", file_url: "/img/naon.webp", size: 10582 },
+  { id: "m4", file_name: "sandaran-digital.webp", file_url: "/img/sandaran-digital.webp", size: 14000 },
+  { id: "m5", file_name: "berilmu.webp", file_url: "/img/berilmu.webp", size: 27100 },
+];
+if (admin) {
+  const { data } = await admin.from("media").select("*").order("created_at", { ascending: false });
+  if (data && data.length) items = data;
+}
+---
+<AdminLayout title="Media" currentPath="/admin/media" crumbs={[{ label: "Admin", href: "/admin/dashboard" }, { label: "Media" }]}>
+  <MediaLibrary client:load initial={items} canUpload={hasSupabase} />
+</AdminLayout>

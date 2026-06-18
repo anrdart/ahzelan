@@ -1,0 +1,38 @@
+---
+import Icon from "@/components/ui/Icon.astro";
+import { Badge } from "@/components/ui/badge";
+import type { Article } from "@/lib/types";
+
+interface Props { items: Article[] }
+const { items } = Astro.props as Props;
+const fmt = (iso: string) => new Date(iso).toLocaleDateString("id-ID", { day: "numeric", month: "short", year: "numeric" });
+---
+<section class="py-12">
+  <div class="container-ahz">
+    <div class="text-center max-w-2xl mx-auto mb-12">
+      <div class="inline-flex items-center gap-2 text-primary font-bold text-sm font-display uppercase tracking-wider mb-3"><Icon name="sparkles" size={15} /> Blog</div>
+      <h2 class="text-[clamp(28px,4vw,40px)] font-extrabold">Belajar bareng, gratis</h2>
+      <p class="text-muted-foreground text-lg mt-3.5 leading-relaxed">Tips digital marketing, SEO, dan tools yang bisa langsung kamu praktikin.</p>
+    </div>
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
+      {items.map((a, i) => (
+        <a href={`/blog/${a.slug}`} class:list={["ahz-card-lift block rounded-lg border border-border bg-card overflow-hidden"]}>
+          <div
+            class:list={["h-42 flex items-center justify-center text-royal-600"]}
+            style={`height:168px;background:${i % 2 ? "var(--brand-gradient-soft)" : "linear-gradient(135deg, var(--amber-100), var(--royal-50))"};`}
+          >
+            <Icon name="file-text" size={40} />
+          </div>
+          <div class="p-5">
+            <div class="flex items-center gap-2.5 mb-2.5">
+              <Badge variant="soft">{a.category}</Badge>
+              <span class="text-[13px] text-muted-foreground">{fmt(a.published_at!)}</span>
+            </div>
+            <h3 class="text-lg font-bold leading-snug mb-2 line-clamp-2">{a.title}</h3>
+            <p class="text-sm text-muted-foreground leading-relaxed line-clamp-2">{a.excerpt}</p>
+          </div>
+        </a>
+      ))}
+    </div>
+  </div>
+</section>

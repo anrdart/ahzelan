@@ -1,0 +1,31 @@
+---
+import Icon from "@/components/ui/Icon.astro";
+import { Badge } from "@/components/ui/badge";
+import type { Recommendation } from "@/lib/types";
+interface Props { items: Recommendation[] }
+const { items } = Astro.props as Props;
+---
+<section class="py-12">
+  <div class="container-ahz">
+    <div class="flex justify-between items-end flex-wrap gap-4 mb-9">
+      <div>
+        <div class="inline-flex items-center gap-2 text-primary font-bold text-sm font-display uppercase tracking-wider mb-2.5"><Icon name="sparkles" size={15} /> Rekomendasi</div>
+        <h2 class="text-[clamp(26px,4vw,38px)] font-extrabold">Tools yang aku pakai & percaya</h2>
+      </div>
+      <a href="/rekomendasi" class="inline-flex items-center gap-2 h-10 px-4 rounded-md border border-input bg-background hover:bg-accent font-display font-semibold text-sm">Lihat Semua <Icon name="arrow-right" size={15} /></a>
+    </div>
+    <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4.5">
+      {items.map((r) => (
+        <a href={r.link_url || "#"} class:list={["ahz-card-lift block rounded-lg border border-border bg-card p-5"]}>
+          <div class="flex justify-between items-start">
+            <span class="w-11 h-11 rounded-xl bg-muted text-slate-700 flex items-center justify-center"><Icon name={r.title.toLowerCase().includes("niagahoster") ? "server" : r.title.toLowerCase().includes("midtrans") ? "credit-card" : r.title.toLowerCase().includes("canva") ? "palette" : r.title.toLowerCase().includes("ubersuggest") ? "search" : r.title.toLowerCase().includes("elementor") ? "puzzle" : "layout-template"} size={22} /></span>
+            {r.badge && <Badge variant="soft">{r.badge}</Badge>}
+          </div>
+          <div class="text-xs text-muted-foreground font-semibold mt-3.5 uppercase tracking-wider">{r.category}</div>
+          <h3 class="text-[17px] font-bold mt-0.5 mb-1.5">{r.title}</h3>
+          <p class="text-sm text-muted-foreground leading-snug">{r.description}</p>
+        </a>
+      ))}
+    </div>
+  </div>
+</section>

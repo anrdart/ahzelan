@@ -1,0 +1,31 @@
+---
+import AdminLayout from "@/layouts/AdminLayout.astro";
+import EntityManager from "@/components/admin/EntityManager";
+import { getAdminClient } from "@/lib/supabase";
+import { NAV_DEFAULT } from "@/lib/site";
+export const prerender = false;
+
+const admin = getAdminClient();
+let rows: any[] = NAV_DEFAULT.map((n, i) => ({ id: `nav-${i}`, label: n.label, href: n.href, sort_order: i, is_external: false, is_visible: true }));
+if (admin) {
+  const { data } = await admin.from("navigation_items").select("*").order("sort_order");
+  if (data && data.length) rows = data;
+}
+
+const columns = [
+  { key: "label", label: "Label", className: "font-display font-semibold" },
+  { key: "href", label: "Link" },
+  { key: "is_external", label: "Eksternal", hideOn: "sm" },
+  { key: "is_visible", label: "Status" },
+];
+const fields = [
+  { type: "text", name: "label", label: "Label", required: true },
+  { type: "text", name: "href", label: "Link / Href", required: true },
+  { type: "number", name: "sort_order", label: "Urutan" },
+  { type: "boolean", name: "is_external", label: "Link eksternal" },
+  { type: "boolean", name: "is_visible", label: "Tampilkan" },
+];
+---
+<AdminLayout title="Navigasi" currentPath="/admin/navigation" crumbs={[{ label: "Admin", href: "/admin/dashboard" }, { label: "Navigasi" }]}>
+  <EntityManager client:load title="Menu" endpoint="/api/admin/navigation" rows={rows} columns={columns} searchKeys={["label", "href"]} fields={fields} />
+</AdminLayout>

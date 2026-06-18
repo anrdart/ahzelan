@@ -1,0 +1,23 @@
+---
+import PublicLayout from "@/layouts/PublicLayout.astro";
+import FaqWithSearch from "@/components/public/FaqWithSearch";
+import { Badge } from "@/components/ui/badge";
+import { getFaqs } from "@/lib/db";
+
+const faqs = await getFaqs(Astro.request, Astro.cookies);
+---
+<PublicLayout title="FAQ" description="Pertanyaan yang sering ditanyain soal layanan Ahzelan." currentPath="/faq">
+  <section class="relative overflow-hidden pt-14 pb-10 text-center">
+    <div class="absolute inset-0" style="background: radial-gradient(50% 80% at 50% 0%, var(--royal-50), transparent 70%);"></div>
+    <div class="container-ahz relative">
+      <Badge variant="soft">FAQ</Badge>
+      <h1 class="mt-4 text-[clamp(32px,5vw,52px)] font-extrabold mx-auto max-w-2xl">Pertanyaan yang sering ditanya</h1>
+      <p class="mt-4 text-lg text-muted-foreground mx-auto max-w-xl leading-relaxed">Belum ketemu jawabannya? Chat aja, santai.</p>
+    </div>
+  </section>
+  <section class="pb-20">
+    <div class="container-ahz" style="max-width: 820px;">
+      <FaqWithSearch client:load items={faqs.map((f) => ({ question: f.question, answer: f.answer, category: f.category ?? "" }))} />
+    </div>
+  </section>
+</PublicLayout>

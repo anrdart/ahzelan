@@ -1,0 +1,103 @@
+---
+import PublicLayout from "@/layouts/PublicLayout.astro";
+import Icon from "@/components/ui/Icon.astro";
+import { Badge } from "@/components/ui/badge";
+import FaqAccordion from "@/components/public/FaqAccordion.tsx";
+import { getPackages, getFaqs } from "@/lib/db";
+import { SITE, waLink } from "@/lib/site";
+import { formatRupiah } from "@/lib/utils";
+
+const [pkgs, faqs] = await Promise.all([
+  getPackages(Astro.request, Astro.cookies),
+  getFaqs(Astro.request, Astro.cookies),
+]);
+
+const benefits = [
+  { icon: "zap", t: "Cepat & ringan", d: "Skor performa tinggi, loading kilat di HP." },
+  { icon: "type", t: "Copy yang ngonversi", d: "Disusun biar pengunjung yakin & klik." },
+  { icon: "message-circle", t: "Langsung ke WhatsApp", d: "Setiap tombol terhubung ke chat kamu." },
+  { icon: "trending-up", t: "Siap iklan", d: "Struktur cocok buat traffic dari ads." },
+];
+---
+<PublicLayout
+  title="Jasa Pembuatan Landing Page"
+  description="Jasa landing page yang fokus ngonversi — bukan cuma cakep dilihat. Dari struktur, copy, sampai tombolnya."
+  currentPath="/jasa-pembuatan-landing-page"
+>
+  <section class="relative overflow-hidden pt-14 pb-10 text-center">
+    <div class="absolute inset-0" style="background: radial-gradient(50% 80% at 50% 0%, var(--royal-50), transparent 70%);"></div>
+    <div class="container-ahz relative">
+      <Badge variant="soft">Jasa Unggulan</Badge>
+      <h1 class="mt-4 text-[clamp(32px,5vw,52px)] font-extrabold mx-auto max-w-2xl">Jasa Pembuatan Landing Page</h1>
+      <p class="mt-4 text-lg text-muted-foreground mx-auto max-w-xl leading-relaxed">Landing page yang dirancang fokus konversi — dari struktur, copy, sampai tombolnya.</p>
+    </div>
+  </section>
+
+  <section class="pb-10">
+    <div class="container-ahz">
+      <div class="grid sm:grid-cols-2 lg:grid-cols-4 gap-4.5">
+        {benefits.map((b) => (
+          <div class="p-5.5 bg-card border border-border rounded-2xl" style="padding:22px;">
+            <span class="text-primary flex mb-3"><Icon name={b.icon} size={26} /></span>
+            <div class="font-display font-bold mb-1">{b.t}</div>
+            <div class="text-sm text-muted-foreground leading-snug">{b.d}</div>
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <section class="py-12">
+    <div class="container-ahz">
+      <div class="text-center max-w-2xl mx-auto mb-12">
+        <div class="inline-flex items-center gap-2 text-primary font-bold text-sm font-display uppercase tracking-wider mb-3"><Icon name="sparkles" size={15} /> Paket Harga</div>
+        <h2 class="text-[clamp(28px,4vw,40px)] font-extrabold">Pilih paket yang pas</h2>
+        <p class="text-muted-foreground text-lg mt-3.5 leading-relaxed">Harga transparan. Bisa upgrade kapan aja.</p>
+      </div>
+      <div class="grid md:grid-cols-3 gap-5 lg:gap-6 items-start">
+        {pkgs.map((p) => {
+          const hot = p.is_featured;
+          return (
+            <div class:list={["relative rounded-[22px] p-7 transition-all", hot ? "bg-slate-900 text-white shadow-xl lg:scale-[1.03]" : "bg-card border border-border shadow-xs"]}>
+              {hot && p.badge && (
+                <div class="absolute -top-3.5 left-1/2 -translate-x-1/2">
+                  <Badge variant="accent" dot>{p.badge}</Badge>
+                </div>
+              )}
+              <div class:list={["font-display font-bold text-[20px] mb-1.5", hot ? "text-white" : "text-foreground"]}>{p.name}</div>
+              <div class:list={["text-sm mb-5", hot ? "text-slate-400" : "text-muted-foreground"]}>{p.description}</div>
+              <div class="flex items-baseline gap-1.5 mb-6">
+                <span class:list={["text-[40px] font-extrabold font-display tracking-tight", hot ? "text-white" : "text-foreground"]}>{formatRupiah(p.price)}</span>
+              </div>
+              <ul class="flex flex-col gap-3 mb-7">
+                {(p.features as string[]).map((f) => (
+                  <li class:list={["flex items-start gap-2.5 text-[15px]", hot ? "text-slate-200" : "text-foreground"]}>
+                    <span class:list={["flex mt-0.5", hot ? "text-royal-300" : "text-primary"]}><Icon name="check-circle" size={19} /></span> {f}
+                  </li>
+                ))}
+              </ul>
+              <a
+                href={waLink(SITE.whatsapp, `Halo, aku mau pesan paket ${p.name}`)}
+                target="_blank"
+                rel="noopener"
+                class:list={["inline-flex items-center justify-center gap-2 w-full h-12 rounded-md font-display font-semibold text-[15px] active:scale-[0.97] transition-all", hot ? "bg-primary text-primary-foreground shadow-brand-sm" : "border border-input bg-background hover:bg-accent"]}
+              >
+                <Icon name="message-circle" size={18} /> Pesan {p.name}
+              </a>
+            </div>
+          );
+        })}
+      </div>
+    </div>
+  </section>
+
+  <section class="py-12">
+    <div class="container-ahz" style="max-width: 820px;">
+      <div class="text-center max-w-2xl mx-auto mb-12">
+        <div class="inline-flex items-center gap-2 text-primary font-bold text-sm font-display uppercase tracking-wider mb-3"><Icon name="sparkles" size={15} /> FAQ</div>
+        <h2 class="text-[clamp(28px,4vw,40px)] font-extrabold">Pertanyaan soal landing page</h2>
+      </div>
+      <FaqAccordion client:visible items={faqs.map((f) => ({ question: f.question, answer: f.answer }))} />
+    </div>
+  </section>
+</PublicLayout>

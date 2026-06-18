@@ -1,0 +1,26 @@
+---
+import Icon from "@/components/ui/Icon.astro";
+import { FALLBACK_PROCESS } from "@/lib/fallback";
+const steps = FALLBACK_PROCESS;
+---
+<section class="py-12">
+  <div class="container-ahz">
+    <div class="text-center max-w-2xl mx-auto mb-12">
+      <div class="inline-flex items-center gap-2 text-primary font-bold text-sm font-display uppercase tracking-wider mb-3"><Icon name="sparkles" size={15} /> Proses Kerja</div>
+      <h2 class="text-[clamp(28px,4vw,40px)] font-extrabold">Gampang, transparan, santai</h2>
+      <p class="text-muted-foreground text-lg mt-3.5 leading-relaxed">Empat langkah dari ngobrol sampai bisnis kamu online.</p>
+    </div>
+    <div class="grid grid-cols-2 lg:grid-cols-4 gap-5">
+      {steps.map((s, i) => (
+        <div class="text-center relative ahz-reveal">
+          <div class="relative w-16 h-16 rounded-2xl bg-card border border-border shadow-sm flex items-center justify-center mx-auto mb-4 text-primary">
+            <Icon name={s.icon} size={28} />
+            <span class="absolute -top-2 -right-2 w-[26px] h-[26px] rounded-full bg-primary text-white text-[13px] font-bold font-display flex items-center justify-center">{i + 1}</span>
+          </div>
+          <h3 class="text-lg font-bold mb-1.5">{s.title}</h3>
+          <p class="text-sm text-muted-foreground leading-snug">{s.desc}</p>
+        </div>
+      ))}
+    </div>
+  </div>
+</section>

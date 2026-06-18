@@ -1,0 +1,21 @@
+---
+import PublicLayout from "@/layouts/PublicLayout.astro";
+import { Badge } from "@/components/ui/badge";
+import GaleriGrid from "@/components/public/GaleriGrid";
+import { FALLBACK_GALLERY } from "@/lib/fallback";
+---
+<PublicLayout title="Galeri" description="Galeri foto & aktivitas Ahzelan." currentPath="/galeri">
+  <section class="relative overflow-hidden pt-14 pb-10 text-center">
+    <div class="absolute inset-0" style="background: radial-gradient(50% 80% at 50% 0%, var(--royal-50), transparent 70%);"></div>
+    <div class="container-ahz relative">
+      <Badge variant="soft">Galeri</Badge>
+      <h1 class="mt-4 text-[clamp(32px,5vw,52px)] font-extrabold mx-auto max-w-2xl">Foto & kegiatan</h1>
+      <p class="mt-4 text-lg text-muted-foreground mx-auto max-w-xl leading-relaxed">Snapshot dari kerja, ngobrol, dan jalan-jalan.</p>
+    </div>
+  </section>
+  <section class="pb-20">
+    <div class="container-ahz">
+      <GaleriGrid client:visible items={FALLBACK_GALLERY} />
+    </div>
+  </section>
+</PublicLayout>

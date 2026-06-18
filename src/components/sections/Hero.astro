@@ -1,0 +1,54 @@
+---
+import Icon from "@/components/ui/Icon.astro";
+import { SITE, waLink } from "@/lib/site";
+
+const floats = [
+  { label: "Website", icon: "globe", top: "12%", left: "-4%" },
+  { label: "Copywriting", icon: "type", top: "62%", left: "-7%" },
+  { label: "Ads", icon: "megaphone", top: "8%", right: "-3%" },
+  { label: "SEO", icon: "trending-up", top: "70%", right: "-5%" },
+];
+---
+<section class="relative overflow-hidden pt-14 pb-20">
+  <div class="absolute inset-0 pointer-events-none" style="background: radial-gradient(60% 60% at 50% 0%, var(--royal-50) 0%, rgba(255,255,255,0) 70%);"></div>
+  <div class="absolute -top-20 -right-16 w-[360px] h-[360px] rounded-full bg-teal-100 pointer-events-none" style="filter: blur(80px); opacity: 0.55;"></div>
+  <div class="container-ahz relative text-center">
+    <div class="inline-flex items-center gap-2 bg-white border border-border rounded-full px-4 py-1.5 text-sm font-semibold font-display shadow-xs text-foreground">
+      <span class="w-2 h-2 rounded-full bg-primary"></span>
+      Siap bantu kamu tumbuh di era digital
+    </div>
+
+    <h1 class="mt-6 mx-auto max-w-[880px] text-[clamp(38px,7vw,72px)] font-extrabold leading-[1.04]">
+      Bikin bisnis kamu <span class="ahz-gradient-text">tumbuh online</span>, tanpa ribet.
+    </h1>
+    <p class="mt-5 mx-auto max-w-[620px] text-[clamp(17px,2.2vw,21px)] text-muted-foreground leading-relaxed">
+      Aku bantu kamu dari landing page, website, copywriting, sampai strategi marketing. Ngobrol dulu aja, santai.
+    </p>
+
+    <div class="mt-9 flex flex-wrap gap-3.5 justify-center">
+      <a href={waLink(SITE.whatsapp)} class="inline-flex items-center gap-2 h-12 px-7 rounded-md bg-primary text-primary-foreground font-display font-semibold text-[15px] shadow-brand-sm hover:shadow-brand active:scale-[0.97] transition-all">
+        <Icon name="message-circle" size={18} /> Chat Ahzelan
+      </a>
+      <a href="/layanan" class="inline-flex items-center gap-2 h-12 px-7 rounded-md border border-input bg-background hover:bg-accent font-display font-semibold text-[15px] active:scale-[0.97] transition-all">
+        Lihat Layanan <Icon name="arrow-right" size={17} />
+      </a>
+    </div>
+
+    <div class="relative max-w-[720px] mx-auto mt-14">
+      <div class="rounded-[28px] overflow-hidden shadow-xl border-[6px] border-white aspect-[16/10] bg-gradient-to-br from-royal-50 to-teal-50">
+        <img src="/img/ahzelan-portrait.webp" alt="Ahzelan" loading="eager" class="w-full h-full object-cover object-[center_20%]" />
+      </div>
+      {floats.map((f) => (
+        <div
+          class:list={["ahz-float absolute bg-white rounded-2xl px-3.5 py-2.5 shadow-lg flex items-center gap-2.5 font-bold text-sm font-display"]}
+          style={`top:${f.top};${f.left ? `left:${f.left};` : ""}${f.right ? `right:${f.right};` : ""}`}
+        >
+          <span class="w-7 h-7 rounded-lg bg-royal-50 text-royal-700 flex items-center justify-center">
+            <Icon name={f.icon} size={15} />
+          </span>
+          {f.label}
+        </div>
+      ))}
+    </div>
+  </div>
+</section>

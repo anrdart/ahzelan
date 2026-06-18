@@ -1,0 +1,18 @@
+---
+import Icon from "@/components/ui/Icon.astro";
+import { FALLBACK_SKILLS } from "@/lib/fallback";
+
+const skills = FALLBACK_SKILLS;
+---
+<section class="py-2">
+  <div class="container-ahz">
+    <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-4">
+      {skills.map((s) => (
+        <div class="flex items-center justify-center gap-3 px-4 py-4 bg-card border border-border rounded-2xl font-display font-bold text-foreground text-sm">
+          <Icon name={s.icon} size={20} class="text-primary" />
+          {s.label}
+        </div>
+      ))}
+    </div>
+  </div>
+</section>

@@ -1,0 +1,28 @@
+---
+import PublicLayout from "@/layouts/PublicLayout.astro";
+import { Breadcrumb } from "@/components/ui/breadcrumb";
+---
+<PublicLayout title="Kebijakan Privasi" description="Kebijakan privasi situs ahzelan.com." currentPath="/kebijakan-privasi">
+  <article class="py-12">
+    <div class="container-ahz ahz-prose">
+      <Breadcrumb items={[{ label: "Beranda", href: "/" }, { label: "Kebijakan Privasi" }]} />
+      <h1 class="mt-6 text-[clamp(28px,4.5vw,42px)] font-extrabold">Kebijakan Privasi</h1>
+      <p class="text-sm text-muted-foreground">Terakhir diperbarui: 17 Juni 2026</p>
+
+      <h2>Informasi yang dikumpulkan</h2>
+      <p>Saat kamu menghubungi kami lewat WhatsApp, email, atau formulir di situs ini, kami dapat menyimpan nama, kontak, dan isi pesanmu untuk kepentingan komunikasi & layanan.</p>
+
+      <h2>Penggunaan informasi</h2>
+      <p>Informasi digunakan untuk: membalas pesan, mengirim penawaran yang relevan, meningkatkan kualitas layanan. Kami tidak akan menjual atau menyewakan data kamu ke pihak ketiga.</p>
+
+      <h2>Cookie</h2>
+      <p>Situs ini dapat menggunakan cookie untuk analitik trafik anonim (mis. Cloudflare Web Analytics) yang tidak melacak individu. Kamu bisa menonaktifkan cookie lewat setelan browser.</p>
+
+      <h2>Hak kamu</h2>
+      <p>Kamu berhak meminta salinan, perubahan, atau penghapusan data pribadi yang kami simpan. Hubungi <a href="mailto:salam@ahzelan.com">salam@ahzelan.com</a> untuk permintaan tersebut.</p>
+
+      <h2>Perubahan kebijakan</h2>
+      <p>Kebijakan ini bisa diperbarui sewaktu-waktu. Perubahan signifikan akan diumumkan di halaman ini.</p>
+    </div>
+  </article>
+</PublicLayout>

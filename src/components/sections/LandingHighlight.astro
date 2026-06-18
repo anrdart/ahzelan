@@ -1,0 +1,45 @@
+---
+import Icon from "@/components/ui/Icon.astro";
+import { Badge } from "@/components/ui/badge";
+
+const benefits = [
+  "Struktur yang fokus konversi",
+  "Copywriting persuasif",
+  "Loading cepat & mobile-first",
+  "Terhubung langsung ke WhatsApp",
+];
+---
+<section class="py-12">
+  <div class="container-ahz">
+    <div class="relative overflow-hidden bg-slate-900 rounded-3xl p-8 sm:p-12 lg:p-14 text-white">
+      <div class="absolute -top-10 -right-10 w-[280px] h-[280px] rounded-full bg-gradient-to-br from-royal-500 to-teal-500" style="filter: blur(70px); opacity: 0.5;"></div>
+      <div class="relative grid lg:grid-cols-[1.2fr_1fr] gap-10 items-center">
+        <div>
+          <Badge variant="accent">Jasa Unggulan</Badge>
+          <h2 class="mt-4 text-[clamp(28px,4vw,42px)] font-extrabold leading-tight">Jasa Landing Page yang ngonversi</h2>
+          <p class="mt-3.5 text-slate-300 text-lg leading-relaxed mb-5">Bukan cuma cakep dilihat. Aku rancang dari struktur, copy, sampai tombolnya biar pengunjung beneran jadi pembeli.</p>
+          <div class="grid sm:grid-cols-2 gap-3 mb-7">
+            {benefits.map((b) => (
+              <div class="flex items-center gap-2.5 text-[15px]">
+                <span class="text-royal-300"><Icon name="check-circle" size={20} /></span> {b}
+              </div>
+            ))}
+          </div>
+          <a href="/jasa-pembuatan-landing-page" class="inline-flex items-center gap-2 h-12 px-7 rounded-md bg-primary text-primary-foreground font-display font-semibold shadow-brand-sm hover:shadow-brand transition-all active:scale-[0.97]">
+            Lihat Paket & Harga <Icon name="arrow-right" size={17} />
+          </a>
+        </div>
+        <div class="bg-white/[0.06] border border-white/10 rounded-2xl p-6 backdrop-blur-md">
+          <div class="text-sm text-slate-400 mb-1.5">Mulai dari</div>
+          <div class="text-[44px] font-extrabold font-display tracking-tight">Rp350<span class="text-xl text-slate-400">rb</span></div>
+          <div class="h-px bg-white/10 my-4"></div>
+          {["Konsultasi gratis", "Revisi sesuai paket", "Support setelah jadi"].map((t) => (
+            <div class="flex items-center gap-2.5 text-[15px] mb-3 text-slate-200">
+              <Icon name="check" size={18} class="text-amber-400" /> {t}
+            </div>
+          ))}
+        </div>
+      </div>
+    </div>
+  </div>
+</section>

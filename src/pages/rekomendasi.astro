@@ -1,0 +1,30 @@
+---
+import PublicLayout from "@/layouts/PublicLayout.astro";
+import RekomendasiFilter from "@/components/public/RekomendasiFilter";
+import { Badge } from "@/components/ui/badge";
+import { getRecommendations } from "@/lib/db";
+
+const items = await getRecommendations(Astro.request, Astro.cookies);
+---
+<PublicLayout
+  title="Rekomendasi Tools & Produk"
+  description="Tools & produk digital marketing yang aku pakai & percaya — hosting, plugin, payment gateway, template, dan tools."
+  currentPath="/rekomendasi"
+>
+  <section class="relative overflow-hidden pt-14 pb-10 text-center">
+    <div class="absolute inset-0" style="background: radial-gradient(50% 80% at 50% 0%, var(--royal-50), transparent 70%);"></div>
+    <div class="container-ahz relative">
+      <Badge variant="soft">Rekomendasi</Badge>
+      <h1 class="mt-4 text-[clamp(32px,5vw,52px)] font-extrabold mx-auto max-w-2xl">Tools & produk yang aku rekomendasiin</h1>
+      <p class="mt-4 text-lg text-muted-foreground mx-auto max-w-xl leading-relaxed">Yang beneran aku pakai buat kerja sehari-hari. Hemat waktu, hasil maksimal.</p>
+    </div>
+  </section>
+  <section class="pb-20">
+    <div class="container-ahz">
+      <RekomendasiFilter client:visible items={items.map((r) => ({
+        id: r.id, title: r.title, category: r.category, description: r.description ?? "",
+        link: r.link_url ?? "#", badge: r.badge ?? undefined,
+      }))} />
+    </div>
+  </section>
+</PublicLayout>

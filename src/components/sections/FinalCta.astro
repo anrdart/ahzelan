@@ -1,0 +1,18 @@
+---
+import Icon from "@/components/ui/Icon.astro";
+import { SITE, waLink } from "@/lib/site";
+---
+<section class="py-12">
+  <div class="container-ahz">
+    <div class="relative overflow-hidden rounded-3xl p-12 sm:p-16 lg:p-20 text-center text-white" style="background: var(--brand-gradient);">
+      <div class="absolute inset-0" style="background: radial-gradient(60% 100% at 50% 0%, rgba(255,255,255,.25), transparent);"></div>
+      <div class="relative">
+        <h2 class="text-[clamp(28px,5vw,48px)] font-extrabold mx-auto max-w-2xl">Yuk, mulai tumbuhin bisnis kamu hari ini</h2>
+        <p class="text-white/90 text-lg mt-4 mx-auto max-w-md">Konsultasi gratis dulu. Nggak ada paksaan, santai aja.</p>
+        <a href={waLink(SITE.whatsapp)} class="mt-8 inline-flex items-center gap-2 h-14 px-8 rounded-md bg-amber-500 hover:bg-amber-600 text-white font-display font-semibold text-base shadow-md active:scale-[0.97] transition-all">
+          <Icon name="message-circle" size={20} /> Chat Ahzelan Sekarang
+        </a>
+      </div>
+    </div>
+  </div>
+</section>

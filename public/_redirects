@@ -1,0 +1,2 @@
+# Spa fallback for /admin (Astro handles the routing)
+/admin/* /admin/:splat 200

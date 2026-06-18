@@ -1,0 +1,72 @@
+---
+import PublicLayout from "@/layouts/PublicLayout.astro";
+import Icon from "@/components/ui/Icon.astro";
+import { Badge } from "@/components/ui/badge";
+import { getArticles } from "@/lib/db";
+
+const articles = await getArticles(Astro.request, Astro.cookies);
+const feat = articles[0];
+const rest = articles.slice(1);
+const fmt = (iso: string) => new Date(iso).toLocaleDateString("id-ID", { day: "numeric", month: "short", year: "numeric" });
+const readingTime = (html: string) => Math.max(1, Math.round(html.replace(/<[^>]+>/g, " ").split(/\s+/).length / 200));
+---
+<PublicLayout title="Blog" description="Artikel & tutorial digital marketing, SEO, dan tools — ditulis santai biar gampang dipahami." currentPath="/blog">
+  <section class="relative overflow-hidden pt-14 pb-10 text-center">
+    <div class="absolute inset-0" style="background: radial-gradient(50% 80% at 50% 0%, var(--royal-50), transparent 70%);"></div>
+    <div class="container-ahz relative">
+      <Badge variant="soft">Blog</Badge>
+      <h1 class="mt-4 text-[clamp(32px,5vw,52px)] font-extrabold mx-auto max-w-2xl">Artikel & Tutorial</h1>
+      <p class="mt-4 text-lg text-muted-foreground mx-auto max-w-xl leading-relaxed">Belajar digital marketing, SEO, dan tools — ditulis santai biar gampang dipahami.</p>
+    </div>
+  </section>
+
+  <section class="pb-20">
+    <div class="container-ahz">
+      {feat && (
+        <a href={`/blog/${feat.slug}`} class="ahz-card-lift block rounded-lg border border-border bg-card overflow-hidden mb-7">
+          <div class="grid lg:grid-cols-[1.1fr_1fr]">
+            <div class="min-h-[240px] flex items-center justify-center text-primary" style="background: var(--brand-gradient-soft);">
+              <Icon name="file-text" size={56} />
+            </div>
+            <div class="p-8">
+              <Badge variant="accent">Terbaru</Badge>
+              <h2 class="mt-3.5 text-[28px] font-extrabold leading-tight">{feat.title}</h2>
+              <p class="mt-3 text-muted-foreground text-[16px] leading-relaxed mb-5">{feat.excerpt}</p>
+              <div class="flex items-center gap-3.5 text-sm text-muted-foreground">
+                <span class="flex items-center gap-1.5">
+                  <span class="w-7 h-7 rounded-full bg-royal-50 text-royal-700 font-display font-bold text-xs flex items-center justify-center">A</span>
+                  Ahzelan
+                </span>
+                <span>·</span>
+                <span>{fmt(feat.published_at!)}</span>
+                <span>·</span>
+                <span>{readingTime(feat.content)} min</span>
+              </div>
+            </div>
+          </div>
+        </a>
+      )}
+
+      <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-5.5">
+        {rest.map((a, i) => (
+          <a href={`/blog/${a.slug}`} class="ahz-card-lift block rounded-lg border border-border bg-card overflow-hidden">
+            <div
+              class="h-40 flex items-center justify-center text-royal-600"
+              style={`height:160px;background:${i % 2 ? "linear-gradient(135deg,var(--amber-100),var(--royal-50))" : "var(--brand-gradient-soft)"};`}
+            >
+              <Icon name="file-text" size={38} />
+            </div>
+            <div class="p-5">
+              <div class="flex items-center gap-2.5 mb-2.5">
+                <Badge variant="soft">{a.category}</Badge>
+                <span class="text-sm text-muted-foreground">{fmt(a.published_at!)}</span>
+              </div>
+              <h3 class="text-lg font-bold leading-snug mb-2 line-clamp-2">{a.title}</h3>
+              <p class="text-sm text-muted-foreground leading-relaxed line-clamp-2">{a.excerpt}</p>
+            </div>
+          </a>
+        ))}
+      </div>
+    </div>
+  </section>
+</PublicLayout>

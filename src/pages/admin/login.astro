@@ -1,0 +1,65 @@
+---
+import "@/styles/globals.css";
+export const prerender = false;
+const error = Astro.url.searchParams.get("error");
+const next = Astro.url.searchParams.get("next") ?? "/admin/dashboard";
+---
+<!doctype html>
+<html lang="id">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Login Admin — Ahzelan</title>
+  </head>
+  <body class="min-h-screen bg-surface-page flex items-center justify-center p-4">
+    <div class="w-full max-w-sm">
+      <div class="flex items-center justify-center mb-7">
+        <img src="/brand/ahzelan-wordmark.png" alt="Ahzelan" class="h-7 w-auto" />
+      </div>
+      <div class="bg-white border border-border rounded-2xl p-7 shadow-sm">
+        <h1 class="text-2xl font-extrabold font-display mb-1">Login Admin</h1>
+        <p class="text-sm text-muted-foreground mb-6">Masuk dengan email admin yang sudah didaftarkan.</p>
+        {error && <div class="mb-4 p-3 rounded-md bg-rose-50 text-rose-600 text-sm">{error}</div>}
+        <form id="login-form" class="space-y-4">
+          <div>
+            <label class="block text-sm font-display font-semibold mb-1.5">Email</label>
+            <input name="email" type="email" required autocomplete="email" class="flex h-11 w-full rounded-md border border-input bg-background px-3.5 text-sm focus:outline-none focus:ring-[3px] focus:ring-ring/40" />
+          </div>
+          <div>
+            <label class="block text-sm font-display font-semibold mb-1.5">Password</label>
+            <input name="password" type="password" required autocomplete="current-password" class="flex h-11 w-full rounded-md border border-input bg-background px-3.5 text-sm focus:outline-none focus:ring-[3px] focus:ring-ring/40" />
+          </div>
+          <button type="submit" class="w-full inline-flex h-11 items-center justify-center rounded-md bg-primary text-primary-foreground font-display font-semibold text-sm shadow-brand-sm hover:shadow-brand active:scale-[0.97] transition-all">
+            Masuk
+          </button>
+        </form>
+      </div>
+      <p class="text-xs text-muted-foreground text-center mt-5">← <a href="/" class="hover:text-foreground">Kembali ke situs</a></p>
+    </div>
+    <script is:inline define:vars={{ next }}>
+      document.getElementById("login-form").addEventListener("submit", async (e) => {
+        e.preventDefault();
+        const fd = new FormData(e.target);
+        const btn = e.target.querySelector('button[type="submit"]');
+        btn.disabled = true;
+        btn.textContent = "Masuk…";
+        try {
+          const res = await fetch("/api/admin/login", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ email: fd.get("email"), password: fd.get("password") }),
+          });
+          if (!res.ok) {
+            const j = await res.json().catch(() => ({}));
+            throw new Error(j.error || "Login gagal");
+          }
+          window.location.href = next;
+        } catch (e) {
+          alert(e.message);
+          btn.disabled = false;
+          btn.textContent = "Masuk";
+        }
+      });
+    </script>
+  </body>
+</html>

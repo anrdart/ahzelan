@@ -1,0 +1,33 @@
+---
+import AdminLayout from "@/layouts/AdminLayout.astro";
+import EntityManager from "@/components/admin/EntityManager";
+import { getAdminClient } from "@/lib/supabase";
+import { FALLBACK_RECOMMENDATIONS } from "@/lib/fallback";
+export const prerender = false;
+
+const admin = getAdminClient();
+let rows = FALLBACK_RECOMMENDATIONS as any[];
+if (admin) {
+  const { data } = await admin.from("recommendations").select("*").order("sort_order");
+  if (data) rows = data;
+}
+
+const columns = [
+  { key: "title", label: "Produk", className: "font-display font-semibold" },
+  { key: "category", label: "Kategori" },
+  { key: "badge", label: "Badge", hideOn: "sm" },
+  { key: "is_visible", label: "Status" },
+];
+const fields = [
+  { type: "text", name: "title", label: "Nama Produk", required: true },
+  { type: "text", name: "category", label: "Kategori", required: true, help: "Hosting, Plugin, Payment, Template, Tools" },
+  { type: "textarea", name: "description", label: "Deskripsi" },
+  { type: "url", name: "link_url", label: "Link Affiliate/Detail" },
+  { type: "text", name: "badge", label: "Badge", placeholder: "Rekomendasi / Favorit" },
+  { type: "number", name: "sort_order", label: "Urutan" },
+  { type: "boolean", name: "is_visible", label: "Tampilkan" },
+];
+---
+<AdminLayout title="Rekomendasi" currentPath="/admin/recommendations" crumbs={[{ label: "Admin", href: "/admin/dashboard" }, { label: "Rekomendasi" }]}>
+  <EntityManager client:load title="Rekomendasi" endpoint="/api/admin/recommendations" rows={rows} columns={columns} searchKeys={["title", "category"]} fields={fields} />
+</AdminLayout>

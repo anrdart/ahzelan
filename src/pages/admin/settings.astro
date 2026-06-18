@@ -1,0 +1,17 @@
+---
+import AdminLayout from "@/layouts/AdminLayout.astro";
+import SettingsForm from "@/components/admin/SettingsForm";
+import { getAdminClient } from "@/lib/supabase";
+import { FALLBACK_SETTINGS } from "@/lib/fallback";
+export const prerender = false;
+
+const admin = getAdminClient();
+let initial: any = FALLBACK_SETTINGS;
+if (admin) {
+  const { data } = await admin.from("site_settings").select("*").eq("id", 1).single();
+  if (data) initial = data;
+}
+---
+<AdminLayout title="Pengaturan" currentPath="/admin/settings" crumbs={[{ label: "Admin", href: "/admin/dashboard" }, { label: "Pengaturan" }]}>
+  <SettingsForm client:load initial={initial} />
+</AdminLayout>

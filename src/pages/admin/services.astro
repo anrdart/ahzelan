@@ -1,0 +1,41 @@
+---
+import AdminLayout from "@/layouts/AdminLayout.astro";
+import EntityManager from "@/components/admin/EntityManager";
+import { getAdminClient } from "@/lib/supabase";
+import { FALLBACK_SERVICES } from "@/lib/fallback";
+export const prerender = false;
+
+const admin = getAdminClient();
+let rows = FALLBACK_SERVICES as any[];
+if (admin) {
+  const { data } = await admin.from("services").select("*").order("sort_order");
+  if (data) rows = data;
+}
+
+const columns = [
+  { key: "title", label: "Judul", className: "font-display font-semibold" },
+  { key: "icon", label: "Icon", hideOn: "sm" },
+  { key: "is_visible", label: "Status" },
+];
+const fields = [
+  { type: "text", name: "title", label: "Judul", required: true },
+  { type: "text", name: "slug", label: "Slug", required: true, help: "huruf kecil, tanpa spasi" },
+  { type: "textarea", name: "description", label: "Deskripsi", required: true },
+  { type: "text", name: "icon", label: "Icon (Lucide)", placeholder: "globe, type, megaphone…" },
+  { type: "text", name: "cta_label", label: "Label CTA" },
+  { type: "url", name: "cta_url", label: "URL CTA" },
+  { type: "number", name: "sort_order", label: "Urutan" },
+  { type: "boolean", name: "is_visible", label: "Tampilkan" },
+];
+---
+<AdminLayout title="Layanan" currentPath="/admin/services" crumbs={[{ label: "Admin", href: "/admin/dashboard" }, { label: "Layanan" }]}>
+  <EntityManager
+    client:load
+    title="Layanan"
+    endpoint="/api/admin/services"
+    rows={rows}
+    columns={columns}
+    searchKeys={["title", "description"]}
+    fields={fields}
+  />
+</AdminLayout>

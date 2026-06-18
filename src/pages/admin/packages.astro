@@ -1,0 +1,35 @@
+---
+import AdminLayout from "@/layouts/AdminLayout.astro";
+import EntityManager from "@/components/admin/EntityManager";
+import { getAdminClient } from "@/lib/supabase";
+import { FALLBACK_PACKAGES } from "@/lib/fallback";
+export const prerender = false;
+
+const admin = getAdminClient();
+let rows = FALLBACK_PACKAGES as any[];
+if (admin) {
+  const { data } = await admin.from("packages").select("*").order("sort_order");
+  if (data) rows = data;
+}
+
+const columns = [
+  { key: "name", label: "Paket", className: "font-display font-semibold" },
+  { key: "price", label: "Harga" },
+  { key: "badge", label: "Badge", hideOn: "sm" },
+  { key: "is_featured", label: "Unggulan" },
+];
+const fields = [
+  { type: "text", name: "name", label: "Nama Paket", required: true },
+  { type: "number", name: "price", label: "Harga (angka)", required: true, help: "contoh: 350000" },
+  { type: "text", name: "description", label: "Deskripsi singkat" },
+  { type: "list", name: "features", label: "Fitur", help: "satu fitur per baris" },
+  { type: "list", name: "bonus", label: "Bonus", help: "satu bonus per baris" },
+  { type: "text", name: "badge", label: "Badge", placeholder: "Paling Populer" },
+  { type: "number", name: "sort_order", label: "Urutan" },
+  { type: "boolean", name: "is_featured", label: "Paket unggulan" },
+  { type: "boolean", name: "is_visible", label: "Tampilkan" },
+];
+---
+<AdminLayout title="Paket Harga" currentPath="/admin/packages" crumbs={[{ label: "Admin", href: "/admin/dashboard" }, { label: "Paket Harga" }]}>
+  <EntityManager client:load title="Paket" endpoint="/api/admin/packages" rows={rows} columns={columns} searchKeys={["name"]} fields={fields} />
+</AdminLayout>

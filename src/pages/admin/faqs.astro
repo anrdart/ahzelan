@@ -1,0 +1,30 @@
+---
+import AdminLayout from "@/layouts/AdminLayout.astro";
+import EntityManager from "@/components/admin/EntityManager";
+import { getAdminClient } from "@/lib/supabase";
+import { FALLBACK_FAQS } from "@/lib/fallback";
+export const prerender = false;
+
+const admin = getAdminClient();
+let rows = FALLBACK_FAQS as any[];
+if (admin) {
+  const { data } = await admin.from("faqs").select("*").order("sort_order");
+  if (data) rows = data;
+}
+
+const columns = [
+  { key: "question", label: "Pertanyaan", className: "font-display font-semibold" },
+  { key: "category", label: "Kategori", hideOn: "sm" },
+  { key: "is_visible", label: "Status" },
+];
+const fields = [
+  { type: "text", name: "question", label: "Pertanyaan", required: true },
+  { type: "textarea", name: "answer", label: "Jawaban", required: true },
+  { type: "text", name: "category", label: "Kategori" },
+  { type: "number", name: "sort_order", label: "Urutan" },
+  { type: "boolean", name: "is_visible", label: "Tampilkan" },
+];
+---
+<AdminLayout title="FAQ" currentPath="/admin/faqs" crumbs={[{ label: "Admin", href: "/admin/dashboard" }, { label: "FAQ" }]}>
+  <EntityManager client:load title="FAQ" endpoint="/api/admin/faqs" rows={rows} columns={columns} searchKeys={["question", "answer"]} fields={fields} />
+</AdminLayout>

@@ -1,0 +1,34 @@
+---
+/**
+ * Admin layout. Sidebar + topbar shell. Auth gate happens in middleware
+ * (src/middleware.ts). Toaster lives in a root-level layout slot if needed.
+ */
+import "@/styles/globals.css";
+import AdminShell from "@/components/admin/AdminShell";
+import { Toaster } from "@/components/ui/sonner";
+
+interface Props {
+  title: string;
+  crumbs?: { label: string; href?: string }[];
+  currentPath?: string;
+}
+
+const { title, crumbs = [], currentPath = "/admin" } = Astro.props as Props;
+const userEmail = Astro.locals.user?.email ?? "admin@ahzelan.com";
+---
+<!doctype html>
+<html lang="id">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="robots" content="noindex,nofollow" />
+    <link rel="icon" type="image/svg+xml" href="/brand/ahzelan-mark.svg" />
+    <title>{title} — Admin Ahzelan</title>
+  </head>
+  <body class="min-h-screen bg-surface-page text-foreground">
+    <AdminShell client:load title={title} crumbs={crumbs} currentPath={currentPath} userEmail={userEmail}>
+      <slot />
+    </AdminShell>
+    <Toaster client:load />
+  </body>
+</html>

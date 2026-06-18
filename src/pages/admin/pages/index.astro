@@ -1,0 +1,40 @@
+---
+import AdminLayout from "@/layouts/AdminLayout.astro";
+import EntityManager from "@/components/admin/EntityManager";
+import { getAdminClient } from "@/lib/supabase";
+export const prerender = false;
+
+const admin = getAdminClient();
+let rows: any[] = [
+  { id: "p-home", title: "Beranda", slug: "/", status: "published", seo_title: "Ahzelan — Bantu Kamu Tumbuh di Era Digital", seo_description: "Sudah bantu banyak individu & perusahaan supaya bisa 10X lebih maju di era industri 4.0." },
+  { id: "p-tentang", title: "Tentang", slug: "/tentang", status: "published", seo_title: "Tentang Ahzelan", seo_description: "Kenalan lebih dekat dengan Ahzelan." },
+  { id: "p-layanan", title: "Layanan", slug: "/layanan", status: "published", seo_title: "Layanan Ahzelan", seo_description: "Layanan digital marketing, website, landing page, copywriting." },
+  { id: "p-jasa", title: "Jasa Landing Page", slug: "/jasa-pembuatan-landing-page", status: "published", seo_title: "Jasa Pembuatan Landing Page", seo_description: "Landing page yang ngonversi." },
+  { id: "p-rekomendasi", title: "Rekomendasi", slug: "/rekomendasi", status: "published", seo_title: "Rekomendasi Tools & Produk", seo_description: "Tools & produk digital marketing." },
+  { id: "p-faq", title: "FAQ", slug: "/faq", status: "published", seo_title: "FAQ — Ahzelan", seo_description: "Pertanyaan yang sering ditanya." },
+  { id: "p-blog", title: "Blog", slug: "/blog", status: "published", seo_title: "Blog & Tutorial — Ahzelan", seo_description: "Artikel digital marketing, SEO, dan tools." },
+  { id: "p-galeri", title: "Galeri", slug: "/galeri", status: "published", seo_title: "Galeri", seo_description: "Foto & kegiatan." },
+  { id: "p-privasi", title: "Kebijakan Privasi", slug: "/kebijakan-privasi", status: "published", seo_title: "Kebijakan Privasi", seo_description: "Kebijakan privasi situs." },
+  { id: "p-bio", title: "Bio Link", slug: "/bio-link", status: "published", seo_title: "Bio Link — Ahzelan", seo_description: "Semua link penting Ahzelan." },
+];
+if (admin) {
+  const { data } = await admin.from("pages").select("*").order("created_at");
+  if (data && data.length) rows = data;
+}
+
+const columns = [
+  { key: "title", label: "Judul", className: "font-display font-semibold" },
+  { key: "slug", label: "Slug" },
+  { key: "status", label: "Status" },
+];
+const fields = [
+  { type: "text", name: "title", label: "Judul", required: true },
+  { type: "text", name: "slug", label: "Slug", required: true, help: "Mis. /tentang, /blog/[slug]" },
+  { type: "text", name: "seo_title", label: "SEO Title" },
+  { type: "textarea", name: "seo_description", label: "SEO Description" },
+  { type: "select", name: "status", label: "Status", options: [{ value: "draft", label: "Draft" }, { value: "published", label: "Published" }] },
+];
+---
+<AdminLayout title="Halaman" currentPath="/admin/pages" crumbs={[{ label: "Admin", href: "/admin/dashboard" }, { label: "Halaman" }]}>
+  <EntityManager client:load title="Halaman" endpoint="/api/admin/pages" rows={rows} columns={columns} searchKeys={["title", "slug"]} fields={fields} />
+</AdminLayout>

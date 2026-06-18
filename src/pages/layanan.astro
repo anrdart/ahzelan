@@ -1,0 +1,48 @@
+---
+import PublicLayout from "@/layouts/PublicLayout.astro";
+import Icon from "@/components/ui/Icon.astro";
+import { Badge } from "@/components/ui/badge";
+import { getServices } from "@/lib/db";
+
+const services = await getServices(Astro.request, Astro.cookies);
+---
+<PublicLayout
+  title="Layanan"
+  description="Layanan digital marketing, website, landing page, copywriting, advertising, dan produk digital dari Ahzelan."
+  currentPath="/layanan"
+>
+  <section class="relative overflow-hidden pt-14 pb-10 text-center">
+    <div class="absolute inset-0" style="background: radial-gradient(50% 80% at 50% 0%, var(--royal-50), transparent 70%);"></div>
+    <div class="container-ahz relative">
+      <Badge variant="soft">Layanan</Badge>
+      <h1 class="mt-4 text-[clamp(32px,5vw,52px)] font-extrabold mx-auto max-w-2xl">Layanan buat bantu kamu tumbuh</h1>
+      <p class="mt-4 text-lg text-muted-foreground mx-auto max-w-xl leading-relaxed">Pilih yang paling pas sama kebutuhan bisnis kamu sekarang. Bingung? Ngobrol dulu aja.</p>
+    </div>
+  </section>
+
+  <section class="pb-20">
+    <div class="container-ahz">
+      <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-5">
+        {services.map((s) => (
+          <div class:list={["rounded-lg border border-border bg-card p-7", s.title === "Jasa Landing Page" ? "ring-1 ring-primary/30" : ""]}>
+            <div
+              class="mb-5 flex items-center justify-center"
+              style={`width:56px;height:56px;border-radius:16px;background:${s.title === "Jasa Landing Page" ? "var(--brand-gradient)" : "var(--brand-primary-soft)"};color:${s.title === "Jasa Landing Page" ? "#fff" : "var(--brand-primary)"};`}
+            >
+              <Icon name={s.icon || "package"} size={28} />
+            </div>
+            <h3 class="text-[21px] font-bold mb-2">{s.title}</h3>
+            <p class="text-muted-foreground text-[15px] leading-relaxed mb-5">{s.description}</p>
+            <a
+              href={s.title === "Jasa Landing Page" ? "/jasa-pembuatan-landing-page" : "#"}
+              onclick={s.title === "Jasa Landing Page" ? undefined : "window.dispatchEvent(new Event('ahz:open-contact')); return false;"}
+              class:list={["inline-flex items-center justify-center w-full h-10 rounded-md text-sm font-semibold font-display transition-all active:scale-[0.97]", s.title === "Jasa Landing Page" ? "bg-primary text-primary-foreground shadow-brand-sm" : "border border-input bg-background hover:bg-accent"]}
+            >
+              {s.title === "Jasa Landing Page" ? "Lihat Paket" : "Konsultasi"}
+            </a>
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
+</PublicLayout>
