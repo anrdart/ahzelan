@@ -2,51 +2,80 @@
 import Icon from "@/components/ui/Icon.astro";
 import { SITE, waLink } from "@/lib/site";
 
+/** Floating chips scattered around the portrait. Positions are
+ *  expressed as offsets from the portrait container (0–100 = inside). */
 const floats = [
-  { label: "Website", icon: "globe", top: "12%", left: "-4%" },
-  { label: "Copywriting", icon: "type", top: "62%", left: "-7%" },
-  { label: "Ads", icon: "megaphone", top: "8%", right: "-3%" },
-  { label: "SEO", icon: "trending-up", top: "70%", right: "-5%" },
+  { label: "Website", icon: "globe", top: "6%", left: "-2%" },
+  { label: "Copywriting", icon: "type", top: "58%", left: "-6%" },
+  { label: "Ads", icon: "megaphone", top: "4%", right: "-2%" },
+  { label: "SEO", icon: "trending-up", top: "62%", right: "-8%" },
+  { label: "Copywriting", icon: "package", top: "32%", right: "-14%" },
+  { label: "Landing Page", icon: "layout-template", top: "36%", left: "-12%" },
 ];
 ---
-<section class="relative overflow-hidden pt-14 pb-20 bg-royal-50/40">
-  <div class="container-ahz relative text-center">
-    <div class="inline-flex items-center gap-2 bg-white border border-border rounded-full px-4 py-1.5 text-sm font-semibold font-display shadow-xs text-foreground">
-      <span class="w-2 h-2 rounded-full bg-primary"></span>
-      Siap bantu kamu tumbuh di era digital
-    </div>
-
-    <h1 class="mt-6 mx-auto max-w-[880px] text-[clamp(38px,7vw,72px)] font-extrabold leading-[1.04]">
-      Bikin bisnis kamu <span class="text-primary">tumbuh online</span>, tanpa ribet.
-    </h1>
-    <p class="mt-5 mx-auto max-w-[620px] text-[clamp(17px,2.2vw,21px)] text-muted-foreground leading-relaxed">
-      Aku bantu kamu dari landing page, website, copywriting, sampai strategi marketing. Ngobrol dulu aja, santai.
-    </p>
-
-    <div class="mt-9 flex flex-wrap gap-3.5 justify-center">
-      <a href={waLink(SITE.whatsapp)} class="inline-flex items-center gap-2 h-12 px-7 rounded-md bg-primary text-primary-foreground font-display font-semibold text-[15px] shadow-brand-sm hover:shadow-brand active:scale-[0.97] transition-all">
-        <Icon name="message-circle" size={18} /> Chat Ahzelan
-      </a>
-      <a href="/layanan" class="inline-flex items-center gap-2 h-12 px-7 rounded-md border border-input bg-background hover:bg-accent font-display font-semibold text-[15px] active:scale-[0.97] transition-all">
-        Lihat Layanan <Icon name="arrow-right" size={17} />
-      </a>
-    </div>
-
-    <div class="relative max-w-[720px] mx-auto mt-14">
-      <div class="rounded-[28px] overflow-hidden shadow-xl border-[6px] border-white aspect-[16/10] bg-royal-50">
-        <img src="/img/ahzelan-portrait.webp" alt="Ahzelan" loading="eager" class="w-full h-full object-cover object-[center_20%]" />
-      </div>
-      {floats.map((f) => (
-        <div
-          class:list={["ahz-float absolute bg-white rounded-2xl px-3.5 py-2.5 shadow-lg flex items-center gap-2.5 font-bold text-sm font-display"]}
-          style={`top:${f.top};${f.left ? `left:${f.left};` : ""}${f.right ? `right:${f.right};` : ""}`}
-        >
-          <span class="w-7 h-7 rounded-lg bg-royal-50 text-royal-700 flex items-center justify-center">
-            <Icon name={f.icon} size={15} />
-          </span>
-          {f.label}
+<section class="relative overflow-hidden pt-12 lg:pt-16 pb-16 lg:pb-24 bg-royal-50/40">
+  <div class="container-ahz relative">
+    <div class="grid lg:grid-cols-[1.05fr_1fr] gap-12 lg:gap-16 items-center">
+      <!-- LEFT: text column -->
+      <div class="text-center lg:text-left order-2 lg:order-1">
+        <div class="inline-flex items-center gap-2 bg-white border border-border rounded-full px-4 py-1.5 text-sm font-semibold font-display shadow-xs text-foreground">
+          <span class="w-2 h-2 rounded-full bg-primary"></span>
+          Siap bantu kamu tumbuh di era digital
         </div>
-      ))}
+
+        <h1 class="mt-6 text-[clamp(36px,6vw,64px)] font-extrabold leading-[1.04] tracking-tight max-w-2xl mx-auto lg:mx-0">
+          Bikin bisnis kamu <span class="text-primary">tumbuh online</span>, tanpa ribet.
+        </h1>
+        <p class="mt-5 text-[clamp(16px,2vw,19px)] text-muted-foreground leading-relaxed max-w-xl mx-auto lg:mx-0">
+          Aku bantu kamu dari landing page, website, copywriting, sampai strategi marketing. Ngobrol dulu aja, santai.
+        </p>
+
+        <div class="mt-8 flex flex-wrap gap-3.5 justify-center lg:justify-start">
+          <a href={waLink(SITE.whatsapp)} class="inline-flex items-center gap-2 h-12 px-7 rounded-md bg-primary text-primary-foreground font-display font-semibold text-[15px] shadow-brand-sm hover:shadow-brand active:scale-[0.97] transition-all">
+            <Icon name="message-circle" size={18} /> Chat Ahzelan
+          </a>
+          <a href="/layanan" class="inline-flex items-center gap-2 h-12 px-7 rounded-md border border-input bg-background hover:bg-accent font-display font-semibold text-[15px] active:scale-[0.97] transition-all">
+            Lihat Layanan <Icon name="arrow-right" size={17} />
+          </a>
+        </div>
+
+        <!-- Trust strip (mobile-only — desktop puts it next to portrait) -->
+        <ul class="mt-8 flex flex-wrap items-center justify-center lg:justify-start gap-x-6 gap-y-2 text-sm text-muted-foreground">
+          <li class="inline-flex items-center gap-1.5"><Icon name="check-circle" size={15} class="text-primary" /> Tanpa ribet</li>
+          <li class="inline-flex items-center gap-1.5"><Icon name="check-circle" size={15} class="text-primary" /> Konsultasi gratis</li>
+          <li class="inline-flex items-center gap-1.5"><Icon name="check-circle" size={15} class="text-primary" /> Support setelah jadi</li>
+        </ul>
+      </div>
+
+      <!-- RIGHT: portrait + playful floating cards -->
+      <div class="relative order-1 lg:order-2 max-w-md mx-auto lg:max-w-none lg:mx-0 w-full">
+        <div class="relative aspect-[4/5] rounded-[32px] overflow-hidden shadow-xl border-[6px] border-white bg-royal-50">
+          <img src="/img/ahzelan-portrait.webp" alt="Ahzelan" loading="eager" class="w-full h-full object-cover object-[center_20%]" />
+        </div>
+
+        {floats.map((f) => (
+          <div
+            class:list={["ahz-float absolute hidden sm:flex items-center gap-2.5 bg-white border border-border rounded-2xl px-3.5 py-2.5 shadow-md font-bold text-sm font-display whitespace-nowrap"]}
+            style={`top:${f.top};${f.left ? `left:${f.left};` : ""}${f.right ? `right:${f.right};` : ""}`}
+          >
+            <span class="w-7 h-7 rounded-lg bg-brand-soft text-primary flex items-center justify-center">
+              <Icon name={f.icon} size={14} />
+            </span>
+            {f.label}
+          </div>
+        ))}
+
+        <!-- Decorative stat badge -->
+        <div class="absolute -bottom-4 left-1/2 -translate-x-1/2 sm:left-8 sm:translate-x-0 bg-white border border-border rounded-2xl px-4 py-2.5 shadow-md flex items-center gap-2.5">
+          <span class="w-9 h-9 rounded-xl bg-amber-100 text-amber-600 flex items-center justify-center">
+            <Icon name="star" size={17} />
+          </span>
+          <div class="text-left">
+            <div class="text-xs text-muted-foreground font-medium">Rating klien</div>
+            <div class="text-sm font-extrabold font-display leading-tight">5.0 / 5.0</div>
+          </div>
+        </div>
+      </div>
     </div>
   </div>
 </section>

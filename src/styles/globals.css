@@ -184,16 +184,71 @@
 
 /* ============================================================
    Dark-mode patches for hardcoded utilities.
-   Components use bg-white / bg-royal-50 tints in many places; remap
-   them under .dark so we don't have to touch every file.
+   Strategy: every surface gets a distinct shade so nothing merges
+   with the page background. Layer order (lightest → darkest):
+     - Floating chips / client tiles / form inputs       → bg-slate-800
+     - Cards (sits on the page)                         → bg-slate-900
+     - Page body / section hero tints                   → bg-slate-950
+   Then add brand-tinted variants for the royal/amber chips.
    ============================================================ */
-.dark .bg-white { background-color: var(--slate-900) !important; }
-.dark .bg-royal-50\/40,
-.dark .bg-royal-50\/60,
-.dark .bg-royal-50 { background-color: var(--slate-900) !important; }
-.dark .border-white { border-color: var(--slate-800) !important; }
-/* keep genuinely-dark surfaces dark in both themes (already slate-900) */
-.dark .bg-slate-900 { background-color: var(--slate-950) !important; }
+.dark .bg-white { background-color: var(--slate-800) !important; }
+/* hero / page tints (originally bg-royal-50/40 or /60) → keep brand feel
+   with a deep, subtle royal tint so sections still read as "ahzelan" */
+.dark .bg-royal-50\/40 { background-color: color-mix(in oklab, var(--royal-900) 18%, var(--slate-950)) !important; }
+.dark .bg-royal-50\/60 { background-color: color-mix(in oklab, var(--royal-900) 26%, var(--slate-950)) !important; }
+.dark .bg-royal-50       { background-color: color-mix(in oklab, var(--royal-900) 32%, var(--slate-900)) !important; }
+/* Amber chip in Hero "rating" badge */
+.dark .bg-amber-100 { background-color: color-mix(in oklab, var(--amber-500) 22%, var(--slate-800)) !important; }
+/* Portrait frame: visible against any bg in dark mode */
+.dark .border-white { border-color: var(--slate-700) !important; }
+/* Surfaces already slate-900 (footer) → step deeper so they don't
+   blend with the slate-950 page body */
+.dark .bg-slate-900 { background-color: var(--slate-900) !important; }
+
+/* ============================================================
+   Specific element overrides for surfaces that need a different
+   contrast treatment than the blanket rules above.
+   ============================================================ */
+/* Navbar blur (sits over the page) — match page depth, semi-transparent */
+.dark .ahz-nav[data-scrolled="true"] { background-color: rgba(2, 6, 23, 0.82) !important; }
+/* Mobile nav Sheet header — keep card-level so it reads against the overlay */
+.dark .ahz-nav { background-color: transparent !important; }
+
+/* WhatsApp floating button — give it a slate lift so it pops on the page */
+.dark .fixed.bottom-5.right-5 {
+  background-color: var(--royal-700) !important;
+  color: #fff !important;
+  box-shadow: 0 8px 24px rgba(46, 65, 145, 0.45) !important;
+}
+
+/* Floating avatar/initials in Testimonials — chip on a card */
+.dark .bg-royal-50.rounded-full {
+  background-color: color-mix(in oklab, var(--royal-700) 22%, var(--slate-800)) !important;
+}
+
+/* ChatDialog icon chip — card-on-slate overlay */
+.dark [data-state="open"] [class*="bg-royal-50"] {
+  background-color: color-mix(in oklab, var(--royal-700) 28%, var(--slate-800)) !important;
+}
+
+/* Hover-only accents that looked subtle in light should still be visible */
+.dark .hover\:bg-royal-50\/60:hover { background-color: color-mix(in oklab, var(--royal-700) 20%, transparent) !important; }
+.dark .text-royal-700 { color: var(--royal-400) !important; }
+
+/* Tooltips/popovers on shadcn already map via --popover token, but
+   explicit security in case the global is overridden elsewhere */
+.dark [role="dialog"], .dark [role="menu"], .dark [role="listbox"] {
+  background-color: var(--popover) !important;
+  color: var(--popover-foreground) !important;
+  border-color: var(--border) !important;
+}
+
+/* Pretty `text-muted-foreground` (used by shadcn primitives) should
+   read on a card in dark mode — explicitly anchor to the token */
+.dark .text-muted-foreground { color: var(--muted-foreground) !important; }
+
+/* Inline alert/quote boxes that hardcode light-50 tints */
+.dark .border-l-primary\/30 { border-left-color: color-mix(in oklab, var(--royal-400) 35%, var(--slate-700)) !important; }
 
 /* ============================================================
    Tailwind v4 theme — expose tokens as utilities
