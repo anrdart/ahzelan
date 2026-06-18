@@ -22,6 +22,7 @@ export const POST: APIRoute = async ({ request, clientAddress }) => {
     return json({ error: "guest_token & content wajib diisi" }, 400);
   }
 
+  try {
   const session = await getOrCreateSession(guest_token);
   if (!session) return json({ error: "Supabase belum dikonfigurasi" }, 503);
 
@@ -62,6 +63,9 @@ export const POST: APIRoute = async ({ request, clientAddress }) => {
     bot_mode: session.bot_mode,
     messages: await getMessages(guest_token),
   });
+  } catch (e: any) {
+    return json({ error: e?.message || "Gagal memproses pesan" }, 500);
+  }
 };
 
 function json(body: unknown, status = 200) {

@@ -1,5 +1,5 @@
 import type { APIRoute } from "astro";
-import { getOrCreateSession, getMessages, markGuestRead } from "@/lib/chat";
+import { getOrCreateSession, getMessages, markGuestRead, type ChatSession } from "@/lib/chat";
 export const prerender = false;
 
 /**
@@ -11,11 +11,15 @@ export const POST: APIRoute = async ({ request }) => {
   if (!guest_token || typeof guest_token !== "string") {
     return json({ error: "guest_token wajib diisi" }, 400);
   }
-  const session = await getOrCreateSession(guest_token);
-  if (!session) return json({ error: "Supabase belum dikonfigurasi" }, 503);
-  await markGuestRead(guest_token);
-  const messages = await getMessages(guest_token);
-  return json({ session, messages });
+  try {
+    const session = await getOrCreateSession(guest_token);
+    if (!session) return json({ error: "Supabase belum dikonfigurasi" }, 503);
+    await markGuestRead(guest_token);
+    const messages = await getMessages(guest_token);
+    return json({ session, messages });
+  } catch (e: any) {
+    return json({ error: e?.message || "Gagal memulai sesi chat" }, 500);
+  }
 };
 
 function json(body: unknown, status = 200) {

@@ -31,15 +31,18 @@ function client() {
   return c;
 }
 
-/** Get or create an anonymous session for a guest token. */
+/** Get or create an anonymous session for a guest token.
+ *  Returns null on hard failure (env missing). Throws with detail if the
+ *  table/query is broken so the API surfaces a useful message. */
 export async function getOrCreateSession(token: string): Promise<ChatSession | null> {
   if (!hasSupabase) return null;
   const c = client();
-  const { data: existing } = await c
+  const { data: existing, error: selErr } = await c
     .from("chat_sessions")
     .select("*")
     .eq("guest_token", token)
     .maybeSingle();
+  if (selErr) throw new Error(`chat_sessions read failed: ${selErr.message}`);
   if (existing) return existing as ChatSession;
 
   const { data, error } = await c
@@ -47,7 +50,13 @@ export async function getOrCreateSession(token: string): Promise<ChatSession | n
     .insert({ guest_token: token, status: "bot", bot_mode: true })
     .select()
     .single();
-  if (error) return null;
+  if (error) {
+    // relation doesn't exist → migration 0002 not applied yet
+    if (/relation .* does not exist|Could not find the table/i.test(error.message)) {
+      throw new Error("Tabel chat belum dibuat. Jalankan supabase/migrations/0002_live_chat.sql di SQL editor.");
+    }
+    throw new Error(`chat_sessions insert failed: ${error.message}`);
+  }
   return data as ChatSession;
 }
 
