@@ -46,7 +46,7 @@ export default function DashboardOverview({ stats, articles, activity }: { stats
               {articles.length === 0 && <div className="p-6 text-sm text-muted-foreground text-center">Belum ada artikel.</div>}
               {articles.map((a, i) => (
                 <div key={a.id} className="flex items-center gap-3.5 px-5 py-3.5" style={{ borderTop: i > 0 ? "1px solid var(--border)" : "none" }}>
-                  <span className="w-9.5 h-9.5 rounded-lg bg-muted text-slate-600 flex items-center justify-center shrink-0" style={{ width: 38, height: 38 }}>
+                  <span className="w-9.5 h-9.5 rounded-lg bg-muted text-slate-600 dark:bg-slate-800 dark:text-slate-300 flex items-center justify-center shrink-0" style={{ width: 38, height: 38 }}>
                     <Icon name="file-text" size={18} />
                   </span>
                   <div className="flex-1 min-w-0">

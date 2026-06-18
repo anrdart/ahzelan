@@ -18,7 +18,7 @@ const { items } = Astro.props as Props;
       {items.map((r) => (
         <a href={r.link_url || "#"} class:list={["ahz-card-lift block rounded-lg border border-border bg-card p-5"]}>
           <div class="flex justify-between items-start">
-            <span class="w-11 h-11 rounded-xl bg-muted text-slate-700 flex items-center justify-center"><Icon name={r.title.toLowerCase().includes("niagahoster") ? "server" : r.title.toLowerCase().includes("midtrans") ? "credit-card" : r.title.toLowerCase().includes("canva") ? "palette" : r.title.toLowerCase().includes("ubersuggest") ? "search" : r.title.toLowerCase().includes("elementor") ? "puzzle" : "layout-template"} size={22} /></span>
+            <span class="w-11 h-11 rounded-xl bg-muted text-slate-700 dark:bg-slate-800 dark:text-slate-200 flex items-center justify-center"><Icon name={r.title.toLowerCase().includes("niagahoster") ? "server" : r.title.toLowerCase().includes("midtrans") ? "credit-card" : r.title.toLowerCase().includes("canva") ? "palette" : r.title.toLowerCase().includes("ubersuggest") ? "search" : r.title.toLowerCase().includes("elementor") ? "extension" : "layout-template"} size={22} /></span>
             {r.badge && <Badge variant="soft">{r.badge}</Badge>}
           </div>
           <div class="text-xs text-muted-foreground font-semibold mt-3.5 uppercase tracking-wider">{r.category}</div>

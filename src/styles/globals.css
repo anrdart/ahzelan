@@ -197,8 +197,11 @@
 .dark .bg-royal-50\/40 { background-color: color-mix(in oklab, var(--royal-900) 18%, var(--slate-950)) !important; }
 .dark .bg-royal-50\/60 { background-color: color-mix(in oklab, var(--royal-900) 26%, var(--slate-950)) !important; }
 .dark .bg-royal-50       { background-color: color-mix(in oklab, var(--royal-900) 32%, var(--slate-900)) !important; }
+/* Same as bg-royal-50, since bg-brand-soft -> --color-brand-soft -> --brand-primary-soft -> --royal-50 */
+.dark .bg-brand-soft    { background-color: color-mix(in oklab, var(--royal-700) 26%, var(--slate-900)) !important; color: var(--royal-300) !important; }
 /* Amber chip in Hero "rating" badge */
 .dark .bg-amber-100 { background-color: color-mix(in oklab, var(--amber-500) 22%, var(--slate-800)) !important; }
+.dark .text-amber-600 { color: var(--amber-400) !important; }
 /* Portrait frame: visible against any bg in dark mode */
 .dark .border-white { border-color: var(--slate-700) !important; }
 /* Surfaces already slate-900 (footer) → step deeper so they don't

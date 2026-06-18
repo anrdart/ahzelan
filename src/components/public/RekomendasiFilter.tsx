@@ -7,7 +7,7 @@ import { ExternalLink } from "lucide-react";
 
 type Item = { id: string; title: string; category: string; description: string; link: string; badge?: string };
 const ICON_BY_TITLE: Record<string, string> = {
-  niagahoster: "server", elementor: "puzzle", midtrans: "credit-card", canva: "palette",
+  niagahoster: "server", elementor: "extension", midtrans: "credit-card", canva: "palette",
   "landing kit": "layout-template", ubersuggest: "search",
 };
 
@@ -33,7 +33,7 @@ export default function RekomendasiFilter({ items }: { items: Item[] }) {
           return (
             <div key={r.id} className="ahz-card-lift rounded-lg border border-border bg-card p-5">
               <div className="flex justify-between items-start mb-3.5">
-                <span className="w-12 h-12 rounded-xl bg-muted text-slate-700 flex items-center justify-center">
+                <span className="w-12 h-12 rounded-xl bg-muted text-slate-700 dark:bg-slate-800 dark:text-slate-200 flex items-center justify-center">
                   <Icon name={icon} size={24} />
                 </span>
                 {r.badge && <Badge variant="soft">{r.badge}</Badge>}

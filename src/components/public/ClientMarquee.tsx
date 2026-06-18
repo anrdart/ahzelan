@@ -8,6 +8,8 @@ import { CLIENT_LOGOS } from "@/lib/site";
  *  - Pauses on hover or while the user is dragging
  *  - Drag with mouse/touch to scrub back/forth
  *  - Loops seamlessly (track is duplicated)
+ *  - Edge fade (left/right) so logos appear/disappear smoothly
+ *  - No card chrome; logos default to grayscale, restore color on hover
  */
 export default function ClientMarquee() {
   const trackRef = useRef<HTMLDivElement>(null);
@@ -16,14 +18,11 @@ export default function ClientMarquee() {
   const draggingRef = useRef(false);
   const lastXRef = useRef(0);
   const pausedRef = useRef(false);
-  const [paused, setPaused] = useState(false);
-  const speed = 30; // px per second
   const halfWidthRef = useRef<number>(0);
 
   useEffect(() => {
     const el = trackRef.current;
     if (!el) return;
-    // Track is rendered twice side-by-side; one full loop = half its scrollWidth.
     halfWidthRef.current = el.scrollWidth / 2;
 
     let raf = 0;
@@ -32,7 +31,7 @@ export default function ClientMarquee() {
       const dt = (ts - prev) / 1000;
       lastTsRef.current = ts;
       if (!pausedRef.current && !draggingRef.current && halfWidthRef.current) {
-        offsetRef.current -= speed * dt;
+        offsetRef.current -= 30 * dt; // 30 px/s
         if (-offsetRef.current >= halfWidthRef.current) {
           offsetRef.current += halfWidthRef.current;
         }
@@ -43,11 +42,6 @@ export default function ClientMarquee() {
     raf = requestAnimationFrame(tick);
     return () => cancelAnimationFrame(raf);
   }, []);
-
-  const setPause = (v: boolean) => {
-    pausedRef.current = v;
-    setPaused(v);
-  };
 
   const onPointerDown = (e: React.PointerEvent) => {
     draggingRef.current = true;
@@ -69,13 +63,14 @@ export default function ClientMarquee() {
   const onPointerUp = () => { draggingRef.current = false; };
 
   return (
-    <div className="overflow-hidden border border-border rounded-2xl bg-white select-none"
-      onMouseEnter={() => setPause(true)}
-      onMouseLeave={() => setPause(false)}
+    <div
+      className="ahz-marquee relative overflow-hidden select-none"
+      onMouseEnter={() => (pausedRef.current = true)}
+      onMouseLeave={() => (pausedRef.current = false)}
     >
       <div
         ref={trackRef}
-        className="flex w-max gap-4 px-4 py-6 will-change-transform cursor-grab active:cursor-grabbing"
+        className="flex w-max gap-12 sm:gap-16 py-8 will-change-transform cursor-grab active:cursor-grabbing"
         style={{ touchAction: "pan-y" }}
         onPointerDown={onPointerDown}
         onPointerMove={onPointerMove}
@@ -83,19 +78,42 @@ export default function ClientMarquee() {
         onPointerCancel={onPointerUp}
       >
         {[...CLIENT_LOGOS, ...CLIENT_LOGOS].map((c, i) => (
-          <div
+          <img
             key={`${c.name}-${i}`}
-            className="shrink-0 w-44 h-16 flex items-center justify-center px-4 bg-white border border-border rounded-xl"
+            src={c.src}
+            alt={c.name}
+            loading="lazy"
             title={c.name}
-            aria-label={c.name}
-          >
-            <img src={c.src} alt={c.name} loading="lazy" className="max-h-10 max-w-full object-contain" draggable={false} />
-          </div>
+            draggable={false}
+            className="ahz-marquee-logo shrink-0 h-12 sm:h-14 w-auto max-w-[160px] object-contain select-none"
+          />
         ))}
       </div>
-      <div className="px-4 py-2 text-center text-xs text-muted-foreground border-t border-border bg-surface-page">
-        {paused ? "Drag untuk menggulir • " : "Arahkan kursor untuk pause • "} Klik & seret untuk menggeser
-      </div>
+      <style>{`
+        .ahz-marquee {
+          /* Fade logos at both edges so they bleed out smoothly.
+             -webkit-mask works in Safari; mask for modern browsers. */
+          mask-image: linear-gradient(to right, transparent 0, #000 8%, #000 92%, transparent 100%);
+          -webkit-mask-image: linear-gradient(to right, transparent 0, #000 8%, #000 92%, transparent 100%);
+        }
+        .ahz-marquee-logo {
+          /* default = no color (grayscale + slight dim) */
+          filter: grayscale(1) opacity(0.55);
+          transition: filter .35s ease, opacity .35s ease, transform .35s ease;
+        }
+        /* on hover any logo → full color + slight lift */
+        .ahz-marquee:hover .ahz-marquee-logo {
+          filter: grayscale(1) opacity(0.78);
+        }
+        .ahz-marquee-logo:hover {
+          filter: grayscale(0) opacity(1) !important;
+          transform: translateY(-2px);
+        }
+        /* respect motion preferences */
+        @media (prefers-reduced-motion: reduce) {
+          .ahz-marquee-logo { transition: none; }
+        }
+      `}</style>
     </div>
   );
 }
