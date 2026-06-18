@@ -12,3 +12,7 @@ dist/
 
 # Design handoff bundle (not part of the source repo)
 /_design/
+
+# Wrangler Pages asset-upload safety
+# Tells wrangler dist/.assetsignore to keep the SSR runtime out of the static asset list
+dist/.assetsignore
