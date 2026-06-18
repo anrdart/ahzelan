@@ -183,6 +183,19 @@
 }
 
 /* ============================================================
+   Dark-mode patches for hardcoded utilities.
+   Components use bg-white / bg-royal-50 tints in many places; remap
+   them under .dark so we don't have to touch every file.
+   ============================================================ */
+.dark .bg-white { background-color: var(--slate-900) !important; }
+.dark .bg-royal-50\/40,
+.dark .bg-royal-50\/60,
+.dark .bg-royal-50 { background-color: var(--slate-900) !important; }
+.dark .border-white { border-color: var(--slate-800) !important; }
+/* keep genuinely-dark surfaces dark in both themes (already slate-900) */
+.dark .bg-slate-900 { background-color: var(--slate-950) !important; }
+
+/* ============================================================
    Tailwind v4 theme — expose tokens as utilities
    ============================================================ */
 @theme inline {
@@ -292,6 +305,23 @@
     background: var(--royal-200);
     color: var(--royal-900);
   }
+}
+
+/* ============================================================
+   On-dark helper — for any dark surface (dark band, dark footer,
+   dark mode). Overrides the base `h{1..6} { color: text-heading }`
+   so headings/p/muted text actually read on dark backgrounds.
+   ============================================================ */
+.on-dark,
+.on-dark h1, .on-dark h2, .on-dark h3, .on-dark h4, .on-dark h5, .on-dark h6 {
+  color: var(--slate-50);
+}
+.on-dark p,
+.on-dark .text-muted-foreground {
+  color: var(--slate-300);
+}
+.on-dark .text-foreground {
+  color: var(--slate-50);
 }
 
 /* ============================================================

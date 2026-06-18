@@ -20,7 +20,7 @@ const { services } = Astro.props as Props;
         <a href={s.cta_url || "/layanan"} class:list={["ahz-card-lift block rounded-lg border border-border bg-card p-7", s.title === "Jasa Landing Page" ? "ring-1 ring-primary/20" : ""]}>
           <div
             class:list={["w-13 h-13 rounded-2xl flex items-center justify-center mb-5"]}
-            style={`width:52px;height:52px;border-radius:14px;background:${s.title === "Jasa Landing Page" ? "var(--brand-gradient)" : "var(--brand-primary-soft)"};color:${s.title === "Jasa Landing Page" ? "#fff" : "var(--brand-primary)"};`}
+            style={`width:52px;height:52px;border-radius:14px;background:${s.title === "Jasa Landing Page" ? "var(--brand-primary)" : "var(--brand-primary-soft)"};color:${s.title === "Jasa Landing Page" ? "#fff" : "var(--brand-primary)"};`}
           >
             <Icon name={s.icon || "package"} size={26} />
           </div>

@@ -11,8 +11,7 @@ const services = await getServices(Astro.request, Astro.cookies);
   description="Layanan digital marketing, website, landing page, copywriting, advertising, dan produk digital dari Ahzelan."
   currentPath="/layanan"
 >
-  <section class="relative overflow-hidden pt-14 pb-10 text-center">
-    <div class="absolute inset-0" style="background: radial-gradient(50% 80% at 50% 0%, var(--royal-50), transparent 70%);"></div>
+  <section class="relative overflow-hidden pt-14 pb-10 text-center bg-royal-50/40">
     <div class="container-ahz relative">
       <Badge variant="soft">Layanan</Badge>
       <h1 class="mt-4 text-[clamp(32px,5vw,52px)] font-extrabold mx-auto max-w-2xl">Layanan buat bantu kamu tumbuh</h1>
@@ -27,7 +26,7 @@ const services = await getServices(Astro.request, Astro.cookies);
           <div class:list={["rounded-lg border border-border bg-card p-7", s.title === "Jasa Landing Page" ? "ring-1 ring-primary/30" : ""]}>
             <div
               class="mb-5 flex items-center justify-center"
-              style={`width:56px;height:56px;border-radius:16px;background:${s.title === "Jasa Landing Page" ? "var(--brand-gradient)" : "var(--brand-primary-soft)"};color:${s.title === "Jasa Landing Page" ? "#fff" : "var(--brand-primary)"};`}
+              style={`width:56px;height:56px;border-radius:16px;background:${s.title === "Jasa Landing Page" ? "var(--brand-primary)" : "var(--brand-primary-soft)"};color:${s.title === "Jasa Landing Page" ? "#fff" : "var(--brand-primary)"};`}
             >
               <Icon name={s.icon || "package"} size={28} />
             </div>

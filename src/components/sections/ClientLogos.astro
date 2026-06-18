@@ -1,5 +1,5 @@
 ---
-import { CLIENT_LOGOS } from "@/lib/site";
+import ClientMarquee from "@/components/public/ClientMarquee";
 ---
 <section class="py-12">
   <div class="container-ahz">
@@ -10,12 +10,6 @@ import { CLIENT_LOGOS } from "@/lib/site";
       </div>
       <h2 class="text-[clamp(26px,4vw,36px)] font-extrabold">Karya yang udah jalan bareng Ahzelan</h2>
     </div>
-    <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-4 items-center">
-      {CLIENT_LOGOS.map((c) => (
-        <div class="flex items-center justify-center p-5 bg-white rounded-xl border border-border grayscale hover:grayscale-0 opacity-80 hover:opacity-100 transition-all duration-300" title={c.name}>
-          <img src={c.src} alt={c.name} loading="lazy" class="max-h-10 w-auto max-w-full object-contain" />
-        </div>
-      ))}
-    </div>
+    <ClientMarquee client:visible />
   </div>
 </section>

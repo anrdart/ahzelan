@@ -7,8 +7,7 @@ import { getFaqs } from "@/lib/db";
 const faqs = await getFaqs(Astro.request, Astro.cookies);
 ---
 <PublicLayout title="FAQ" description="Pertanyaan yang sering ditanyain soal layanan Ahzelan." currentPath="/faq">
-  <section class="relative overflow-hidden pt-14 pb-10 text-center">
-    <div class="absolute inset-0" style="background: radial-gradient(50% 80% at 50% 0%, var(--royal-50), transparent 70%);"></div>
+  <section class="relative overflow-hidden pt-14 pb-10 text-center bg-royal-50/40">
     <div class="container-ahz relative">
       <Badge variant="soft">FAQ</Badge>
       <h1 class="mt-4 text-[clamp(32px,5vw,52px)] font-extrabold mx-auto max-w-2xl">Pertanyaan yang sering ditanya</h1>

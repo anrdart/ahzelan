@@ -57,6 +57,8 @@ const ogImage = new URL(image, SITE.url).toString();
     <meta name="twitter:description" content={description} />
     <meta name="twitter:image" content={ogImage} />
     <link rel="preconnect" href="https://wa.me" />
+    {/* Pre-paint: apply saved theme before stylesheet, avoids FOUC */}
+    <script is:inline src="/theme-init.js"></script>
     {jsonLd && <script type="application/ld+json" set:html={JSON.stringify(jsonLd)} />}
   </head>
   <body class="min-h-screen flex flex-col bg-background text-foreground">

@@ -19,7 +19,7 @@ const fmt = (iso: string) => new Date(iso).toLocaleDateString("id-ID", { day: "n
         <a href={`/blog/${a.slug}`} class:list={["ahz-card-lift block rounded-lg border border-border bg-card overflow-hidden"]}>
           <div
             class:list={["h-42 flex items-center justify-center text-royal-600"]}
-            style={`height:168px;background:${i % 2 ? "var(--brand-gradient-soft)" : "linear-gradient(135deg, var(--amber-100), var(--royal-50))"};`}
+            style={`height:168px;background:${i % 2 ? "var(--royal-50)" : "var(--amber-100)"};`}
           >
             <Icon name="file-text" size={40} />
           </div>

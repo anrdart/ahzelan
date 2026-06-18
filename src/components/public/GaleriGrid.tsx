@@ -29,7 +29,7 @@ export default function GaleriGrid({ items }: { items: Item[] }) {
                 loading="lazy"
                 className="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
               />
-              <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent" />
+              <div className="absolute inset-x-0 bottom-0 h-1/2 bg-black/40" />
               <div className="absolute bottom-0 left-0 right-0 p-3.5">
                 <div className="text-white text-sm font-display font-semibold drop-shadow">{it.caption}</div>
               </div>

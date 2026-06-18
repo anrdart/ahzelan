@@ -11,8 +11,7 @@ const fmt = (iso: string) => new Date(iso).toLocaleDateString("id-ID", { day: "n
 const readingTime = (html: string) => Math.max(1, Math.round(html.replace(/<[^>]+>/g, " ").split(/\s+/).length / 200));
 ---
 <PublicLayout title="Blog" description="Artikel & tutorial digital marketing, SEO, dan tools — ditulis santai biar gampang dipahami." currentPath="/blog">
-  <section class="relative overflow-hidden pt-14 pb-10 text-center">
-    <div class="absolute inset-0" style="background: radial-gradient(50% 80% at 50% 0%, var(--royal-50), transparent 70%);"></div>
+  <section class="relative overflow-hidden pt-14 pb-10 text-center bg-royal-50/40">
     <div class="container-ahz relative">
       <Badge variant="soft">Blog</Badge>
       <h1 class="mt-4 text-[clamp(32px,5vw,52px)] font-extrabold mx-auto max-w-2xl">Artikel & Tutorial</h1>
@@ -25,7 +24,7 @@ const readingTime = (html: string) => Math.max(1, Math.round(html.replace(/<[^>]
       {feat && (
         <a href={`/blog/${feat.slug}`} class="ahz-card-lift block rounded-lg border border-border bg-card overflow-hidden mb-7">
           <div class="grid lg:grid-cols-[1.1fr_1fr]">
-            <div class="min-h-[240px] flex items-center justify-center text-primary" style="background: var(--brand-gradient-soft);">
+            <div class="min-h-[240px] flex items-center justify-center text-primary bg-royal-50">
               <Icon name="file-text" size={56} />
             </div>
             <div class="p-8">
@@ -52,7 +51,7 @@ const readingTime = (html: string) => Math.max(1, Math.round(html.replace(/<[^>]
           <a href={`/blog/${a.slug}`} class="ahz-card-lift block rounded-lg border border-border bg-card overflow-hidden">
             <div
               class="h-40 flex items-center justify-center text-royal-600"
-              style={`height:160px;background:${i % 2 ? "linear-gradient(135deg,var(--amber-100),var(--royal-50))" : "var(--brand-gradient-soft)"};`}
+              style={`height:160px;background:${i % 2 ? "var(--amber-100)" : "var(--royal-50)"};`}
             >
               <Icon name="file-text" size={38} />
             </div>
