@@ -26,7 +26,7 @@ export default function MobileNav({ items, currentPath }: { items: readonly Item
       <SheetContent side="right" className="w-[88vw] max-w-sm p-0">
         <SheetHeader className="border-b border-border px-5 py-4">
           <SheetTitle className="flex items-center gap-2.5">
-            <img src="/brand/ahzelan-wordmark.png" alt="Ahzelan" className="h-7 w-auto" />
+            <img src="/brand/ahzelan-logo-color.png" alt="Ahzelan" className="h-7 w-auto" />
           </SheetTitle>
         </SheetHeader>
         <div className="flex flex-col gap-1 p-4">

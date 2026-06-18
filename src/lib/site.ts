@@ -29,18 +29,36 @@ export const BRAND_UNITS = [
   {
     name: "Naon.id",
     href: "https://naon.id",
+    logo: "/img/naon.webp",
     desc: "Tempat kamu cari produk premium untuk kebutuhan digital marketing",
   },
   {
     name: "Sandaran Digital",
     href: "https://sandarandigital.com",
+    logo: "/img/sandaran-digital.webp",
     desc: "Jasa pembuatan website terbaik dengan layanan after sales yang tiada duanya",
   },
   {
     name: "Berilmu.id",
     href: "https://berilmu.id",
+    logo: "/img/berilmu.webp",
     desc: "Tempat terbaik buat belajar ilmu baru seputar digital marketing dan sejenisnya",
   },
+] as const;
+
+/** Client/partner logos shown in the "Dipercaya banyak bisnis" strip. */
+export const CLIENT_LOGOS = [
+  { name: "AKSI", src: "/clients/aksi.webp" },
+  { name: "Al-Fatihah", src: "/clients/alfatihah.webp" },
+  { name: "FYI", src: "/clients/fyi.webp" },
+  { name: "BAZNAS", src: "/clients/baznas.webp" },
+  { name: "Sedekah Air", src: "/clients/sedekah-air.webp" },
+  { name: "DHI", src: "/clients/dhi.webp" },
+  { name: "BMH", src: "/clients/bmh.webp" },
+  { name: "PMI", src: "/clients/pmi.webp" },
+  { name: "RYI", src: "/clients/ryi.webp" },
+  { name: "Yashiruna", src: "/clients/yashiruna.webp" },
+  { name: "MPA", src: "/clients/mpa.webp" },
 ] as const;
 
 export const NAV_DEFAULT = [

@@ -57,7 +57,7 @@ export default function AdminShell({
       >
         <div className="h-16 flex items-center gap-2 px-5 border-b border-border">
           <a href="/admin/dashboard">
-            <img src="/brand/ahzelan-wordmark.png" alt="Ahzelan" className="h-6 w-auto" />
+            <img src="/brand/ahzelan-logo-color.png" alt="Ahzelan" className="h-6 w-auto" />
           </a>
           <span className="text-[10px] font-bold text-royal-700 bg-royal-50 px-1.5 py-0.5 rounded font-display">ADMIN</span>
         </div>
