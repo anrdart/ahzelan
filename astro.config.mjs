@@ -7,6 +7,10 @@ import tailwindcss from "@tailwindcss/vite";
 
 const SITE = process.env.PUBLIC_SITE_URL || "https://ahzelan.com";
 
+// True for `astro build` (and preview), false for `astro dev`.
+// import.meta.env is undefined when this config module is loaded, so detect via argv.
+const isBuild = process.argv.includes("build") || process.argv.includes("preview");
+
 // https://astro.build/config
 export default defineConfig({
   site: SITE,
@@ -21,10 +25,10 @@ export default defineConfig({
   vite: {
     plugins: [tailwindcss()],
     resolve: {
-      // Cloudflare Workers build: react-dom/server.browser for SSR
-      alias: import.meta.env?.PROD
-        ? { "react-dom/server": "react-dom/server.edge" }
-        : {},
+      // React 19 on Cloudflare Workers: react-dom/server.browser pulls in
+      // MessageChannel (not in workerd). Swap to the edge entry for the build.
+      // Dev stays on the default (Node) entry so HMR is unaffected.
+      alias: isBuild ? { "react-dom/server": "react-dom/server.edge" } : {},
     },
   },
   prefetch: { prefetchAll: true, defaultStrategy: "viewport" },
