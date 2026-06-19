@@ -1,7 +1,7 @@
 ---
 import AdminLayout from "@/layouts/AdminLayout.astro";
 import MediaLibrary from "@/components/admin/MediaLibrary";
-import { getAdminClient, hasSupabase } from "@/lib/supabase";
+import { getAdminClient, checkSupabase } from "@/lib/supabase";
 export const prerender = false;
 
 const admin = getAdminClient();
@@ -18,5 +18,5 @@ if (admin) {
 }
 ---
 <AdminLayout title="Media" currentPath="/admin/media" crumbs={[{ label: "Admin", href: "/admin/dashboard" }, { label: "Media" }]}>
-  <MediaLibrary client:load initial={items} canUpload={hasSupabase} />
+  <MediaLibrary client:load initial={items} canUpload={checkSupabase()} />
 </AdminLayout>

@@ -1,0 +1,8 @@
+---
+import AdminLayout from "@/layouts/AdminLayout.astro";
+import ActivityLog from "@/components/admin/ActivityLog";
+export const prerender = false;
+---
+<AdminLayout title="Log Aktivitas" currentPath="/admin/activity" crumbs={[{ label: "Admin", href: "/admin/dashboard" }, { label: "Log Aktivitas" }]}>
+  <ActivityLog client:load />
+</AdminLayout>

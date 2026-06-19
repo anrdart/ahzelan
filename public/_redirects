@@ -1,2 +1,2 @@
-# Spa fallback for /admin (Astro handles the routing)
-/admin/* /admin/:splat 200
+# Astro SSR handles all routing via the Worker entry point.
+# No rewrites needed for Workers mode.

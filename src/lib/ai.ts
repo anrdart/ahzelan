@@ -2,17 +2,20 @@
  * Z.ai GLM client (OpenAI-compatible chat completions endpoint).
  * Docs: https://z.ai/  | API key from the Z.ai coding plan dashboard.
  *
- * Env: ZAI_API_KEY (secret, server-only). ZAI_MODEL optional (default glm-4.6-air).
+ * Env: ZAI_API_KEY (secret, server-only). ZAI_MODEL optional (default glm-4.5-air).
  *
  * Fallback: if no key, `reply()` returns null and the chat layer answers from
  * the FAQ table instead — so the widget works before creds are wired.
  */
 
-const ZAI_URL = process.env.ZAI_API_URL || "https://api.z.ai/api/paas/v4/chat/completions";
-const ZAI_KEY = process.env.ZAI_API_KEY || import.meta.env.ZAI_API_KEY || "";
-const ZAI_MODEL = process.env.ZAI_MODEL || "glm-4.6-air";
+// Cloudflare Workers: secrets land on process.env per-request, not at module load.
+function zaiEnv() {
+  const url = process.env.ZAI_API_URL || import.meta.env.ZAI_API_URL || "https://api.z.ai/api/paas/v4/chat/completions";
+  const key = process.env.ZAI_API_KEY || import.meta.env.ZAI_API_KEY || "";
+  const model = process.env.ZAI_MODEL || import.meta.env.ZAI_MODEL || "glm-4.5-air";
+  return { url, key, model };
+}
 
-export const hasAI = Boolean(ZAI_KEY);
 
 /** Brand-voice system prompt — santai Ahzelan, FAQ-aware, scope-limited. */
 export const SYSTEM_PROMPT = `Kamu adalah asisten chat Ahzelan (ahzelan.com) — personal brand digital marketing asal Indonesia.
@@ -61,21 +64,22 @@ export type ChatTurn = { role: "system" | "user" | "assistant"; content: string 
  * Throws on non-2xx so the caller can surface a friendly error.
  */
 export async function aiReply(history: ChatTurn[]): Promise<string | null> {
-  if (!hasAI) return null;
+  const { url, key, model } = zaiEnv();
+  if (!key) return null;
 
   const body = {
-    model: ZAI_MODEL,
+    model,
     messages: [{ role: "system", content: SYSTEM_PROMPT }, ...history],
     temperature: 0.6,
-    max_tokens: 400,
+    max_tokens: 1024,
     stream: false,
   };
 
-  const res = await fetch(ZAI_URL, {
+  const res = await fetch(url, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
-      Authorization: `Bearer ${ZAI_KEY}`,
+      Authorization: `Bearer ${key}`,
     },
     body: JSON.stringify(body),
   });
@@ -86,6 +90,9 @@ export async function aiReply(history: ChatTurn[]): Promise<string | null> {
   }
 
   const data: any = await res.json();
-  const content = data?.choices?.[0]?.message?.content;
+  const msg = data?.choices?.[0]?.message;
+  // GLM reasoning models put the visible reply in `content` but may return it
+  // empty with reasoning in `reasoning_content`. Fall back to reasoning_content.
+  const content = msg?.content || msg?.reasoning_content || "";
   return typeof content === "string" && content.trim() ? content.trim() : null;
 }

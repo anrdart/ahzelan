@@ -2,8 +2,9 @@
 import PublicLayout from "@/layouts/PublicLayout.astro";
 import Icon from "@/components/ui/Icon.astro";
 import { Badge } from "@/components/ui/badge";
-import { FALLBACK_SKILLS } from "@/lib/fallback";
+import { getSkills } from "@/lib/db";
 import { SITE, waLink, BRAND_UNITS } from "@/lib/site";
+const skills = await getSkills(Astro.request, Astro.cookies);
 ---
 <PublicLayout
   title="Tentang Ahzelan"
@@ -28,7 +29,7 @@ import { SITE, waLink, BRAND_UNITS } from "@/lib/site";
           Sudah bantu banyak individu & perusahaan supaya bisa 10X jauh lebih maju di era industri 4.0 dengan digital marketing. Aku habiskan waktu 16 jam sehari buat digital marketing, especially website, copywriting, dan advertising.
         </p>
         <div class="flex flex-wrap gap-2.5 my-8">
-          {FALLBACK_SKILLS.map((f) => (
+          {skills.map((f) => (
             <span class="inline-flex items-center gap-1.5 px-3.5 py-2 bg-muted rounded-full font-semibold text-sm font-display">
               <Icon name={f.icon} size={15} class="text-primary" /> {f.label}
             </span>

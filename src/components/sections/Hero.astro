@@ -55,6 +55,7 @@ const floats = [
 
         {floats.map((f) => (
           <div
+            aria-hidden="true"
             class:list={["ahz-float absolute hidden sm:flex items-center gap-2.5 bg-white border border-border rounded-2xl px-3.5 py-2.5 shadow-md font-bold text-sm font-display whitespace-nowrap"]}
             style={`top:${f.top};${f.left ? `left:${f.left};` : ""}${f.right ? `right:${f.right};` : ""}`}
           >

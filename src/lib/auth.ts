@@ -24,7 +24,8 @@ export async function getCurrentUser(
     .eq("id", 1)
     .single();
   const allow = (settings?.whitelist_admins as string[] | null) ?? [];
-  if (!email || (allow.length > 0 && !allow.includes(email))) return null;
+  // Fail CLOSED: an empty/unreadable whitelist means no one is an admin.
+  if (!email || allow.length === 0 || !allow.includes(email)) return null;
   return { id: data.user.id, email };
 }
 

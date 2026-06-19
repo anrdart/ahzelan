@@ -6,22 +6,57 @@ import { Avatar } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
 import { Breadcrumb } from "@/components/ui/breadcrumb";
 import { Toaster, toast } from "sonner";
+import CommandPalette from "./CommandPalette";
+import ThemeToggle from "@/components/layout/ThemeToggle";
 
-const NAV = [
-  { id: "dashboard", label: "Dashboard", icon: "layout-dashboard", href: "/admin/dashboard" },
-  { id: "chat", label: "Live Chat", icon: "message-circle", href: "/admin/chat" },
-  { id: "pages", label: "Halaman", icon: "file-text", href: "/admin/pages" },
-  { id: "media", label: "Media", icon: "image", href: "/admin/media" },
-  { id: "theme", label: "Tema", icon: "palette", href: "/admin/theme" },
-  { id: "navigation", label: "Navigasi", icon: "panel-left", href: "/admin/navigation" },
-  { id: "services", label: "Layanan", icon: "layout-template", href: "/admin/services" },
-  { id: "packages", label: "Paket Harga", icon: "credit-card", href: "/admin/packages" },
-  { id: "testimonials", label: "Testimoni", icon: "users", href: "/admin/testimonials" },
-  { id: "faqs", label: "FAQ", icon: "file-text", href: "/admin/faqs" },
-  { id: "recommendations", label: "Rekomendasi", icon: "package", href: "/admin/recommendations" },
-  { id: "articles", label: "Artikel", icon: "file-text", href: "/admin/articles" },
-  { id: "settings", label: "Pengaturan", icon: "settings", href: "/admin/settings" },
-] as const;
+type NavItem = { id: string; label: string; icon: string; href: string };
+type NavGroup = { label: string | null; items: NavItem[] };
+
+const NAV_GROUPS: NavGroup[] = [
+  {
+    label: null,
+    items: [
+      { id: "dashboard", label: "Dashboard", icon: "layout-dashboard", href: "/admin/dashboard" },
+      { id: "chat", label: "Live Chat", icon: "message-circle", href: "/admin/chat" },
+    ],
+  },
+  {
+    label: "Konten",
+    items: [
+      { id: "articles", label: "Artikel", icon: "newspaper", href: "/admin/articles" },
+      { id: "pages", label: "Halaman", icon: "file-text", href: "/admin/pages" },
+      { id: "gallery", label: "Galeri", icon: "images", href: "/admin/gallery" },
+      { id: "bio-links", label: "Bio Link", icon: "link", href: "/admin/bio-links" },
+    ],
+  },
+  {
+    label: "Bisnis",
+    items: [
+      { id: "services", label: "Layanan", icon: "layout-template", href: "/admin/services" },
+      { id: "packages", label: "Paket Harga", icon: "credit-card", href: "/admin/packages" },
+      { id: "testimonials", label: "Testimoni", icon: "users", href: "/admin/testimonials" },
+      { id: "faqs", label: "FAQ", icon: "help-circle", href: "/admin/faqs" },
+      { id: "recommendations", label: "Rekomendasi", icon: "package", href: "/admin/recommendations" },
+    ],
+  },
+  {
+    label: "Tampilan",
+    items: [
+      { id: "media", label: "Media", icon: "image", href: "/admin/media" },
+      { id: "navigation", label: "Navigasi", icon: "panel-left", href: "/admin/navigation" },
+      { id: "theme", label: "Tema", icon: "palette", href: "/admin/theme" },
+      { id: "process", label: "Proses Kerja", icon: "workflow", href: "/admin/process" },
+      { id: "skills", label: "Keahlian", icon: "award", href: "/admin/skills" },
+    ],
+  },
+  {
+    label: "Sistem",
+    items: [
+      { id: "activity", label: "Log Aktivitas", icon: "activity", href: "/admin/activity" },
+      { id: "settings", label: "Pengaturan", icon: "settings", href: "/admin/settings" },
+    ],
+  },
+];
 
 const isActive = (href: string, current: string) => current === href || current.startsWith(href + "/");
 
@@ -72,7 +107,7 @@ export default function AdminShell({
       {/* Sidebar */}
       <aside
         className={cn(
-          "fixed inset-y-0 left-0 z-40 w-60 bg-white border-r border-border transition-transform lg:relative lg:translate-x-0 flex flex-col",
+          "fixed inset-y-0 left-0 z-40 w-60 bg-sidebar border-r border-border transition-transform lg:relative lg:translate-x-0 flex flex-col",
           open ? "translate-x-0" : "-translate-x-full",
         )}
       >
@@ -82,24 +117,34 @@ export default function AdminShell({
           </a>
           <span className="text-[10px] font-bold text-royal-700 bg-royal-50 px-1.5 py-0.5 rounded font-display">ADMIN</span>
         </div>
-        <nav className="flex-1 overflow-y-auto p-3 flex flex-col gap-0.5">
-          {NAV.map((n) => (
-            <a
-              key={n.id}
-              href={n.href}
-              className={cn(
-                "flex items-center gap-3 px-3 py-2.5 rounded-lg font-display font-semibold text-[14.5px] transition-colors",
-                isActive(n.href, currentPath)
-                  ? "bg-royal-50 text-royal-700"
-                  : "text-foreground hover:bg-muted",
+        <nav className="flex-1 overflow-y-auto p-3 flex flex-col gap-1">
+          {NAV_GROUPS.map((g, gi) => (
+            <div key={gi}>
+              {g.label && (
+                <div className="px-3 pt-4 pb-1.5 text-[11px] font-bold uppercase tracking-wider text-muted-foreground select-none">{g.label}</div>
               )}
-            >
-              <Icon name={n.icon} size={19} />
-              <span className="flex-1">{n.label}</span>
-              {n.id === "chat" && chatUnread > 0 && (
-                <span className="shrink-0 min-w-5 h-5 px-1.5 rounded-full bg-primary text-primary-foreground text-[11px] font-bold flex items-center justify-center">{chatUnread}</span>
-              )}
-            </a>
+              {g.items.map((n) => (
+                <a
+                  key={n.id}
+                  href={n.href}
+                  className={cn(
+                    "flex items-center gap-3 px-3 py-2 rounded-lg font-display font-semibold text-[14px] transition-colors",
+                    isActive(n.href, currentPath)
+                      ? "bg-royal-50 text-royal-700"
+                      : "text-foreground hover:bg-muted",
+                  )}
+                >
+                  <Icon name={n.icon} size={18} />
+                  <span className="flex-1">{n.label}</span>
+                  {n.id === "chat" && chatUnread > 0 && (
+                    <span
+                      aria-label={`${chatUnread} pesan belum dibaca`}
+                      className="shrink-0 min-w-5 h-5 px-1.5 rounded-full bg-primary text-primary-foreground text-[11px] font-bold flex items-center justify-center"
+                    >{chatUnread}</span>
+                  )}
+                </a>
+              ))}
+            </div>
           ))}
         </nav>
         <div className="p-3.5 border-t border-border flex items-center gap-2.5">
@@ -124,7 +169,7 @@ export default function AdminShell({
 
       {/* Main */}
       <div className="flex-1 min-w-0 flex flex-col">
-        <header className="h-16 sticky top-0 z-20 bg-white/85 backdrop-blur-md border-b border-border flex items-center gap-4 px-6">
+        <header className="h-16 sticky top-0 z-20 bg-card/85 backdrop-blur-md border-b border-border flex items-center gap-4 px-6">
           <button onClick={() => setOpen(true)} aria-label="Menu" className="lg:hidden inline-flex h-9 w-9 items-center justify-center rounded-md border border-input bg-background">
             <Icon name="menu" size={18} />
           </button>
@@ -136,17 +181,23 @@ export default function AdminShell({
             )}
             <h1 className="text-[19px] font-extrabold font-display truncate">{title}</h1>
           </div>
-          <div className="hidden md:flex items-center gap-2 bg-muted rounded-lg px-3 py-1.5 text-muted-foreground text-sm w-48">
+          <button
+            onClick={() => document.dispatchEvent(new KeyboardEvent("keydown", { key: "k", metaKey: true }))}
+            className="hidden md:flex items-center gap-2 bg-muted rounded-lg px-3 py-1.5 text-muted-foreground text-sm w-48 hover:bg-muted/80 transition-colors"
+          >
             <Icon name="search" size={15} />
             <span>Cari...</span>
             <kbd className="ml-auto font-mono text-[11px] bg-background border border-border rounded px-1.5 py-px">⌘K</kbd>
-          </div>
+          </button>
+          <ThemeToggle />
           <button aria-label="Notifikasi" className="inline-flex h-9 w-9 items-center justify-center rounded-md border border-input bg-background">
             <Icon name="bell" size={17} />
           </button>
         </header>
         <main className="flex-1 p-6 lg:p-8 max-w-[1400px] w-full mx-auto">{children}</main>
       </div>
+      <CommandPalette />
+      <Toaster position="bottom-right" richColors />
     </div>
   );
 }

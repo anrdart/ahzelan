@@ -20,12 +20,12 @@ export const POST: APIRoute = async ({ request, cookies }) => {
     return new Response(JSON.stringify({ error: "Supabase belum dikonfigurasi (set env vars)" }), { status: 503 });
   }
 
-  // Optional whitelist check before sign-in
+  // Whitelist check before sign-in. Fail CLOSED: empty whitelist = no admins.
   const adminClient = getAdminClient();
   if (adminClient) {
     const { data: settings } = await adminClient.from("site_settings").select("whitelist_admins").eq("id", 1).single();
     const allow = (settings?.whitelist_admins as string[] | null) ?? [];
-    if (allow.length > 0 && !allow.includes(email)) {
+    if (allow.length === 0 || !allow.includes(email)) {
       return new Response(JSON.stringify({ error: "Email ini tidak terdaftar sebagai admin" }), { status: 403 });
     }
   }

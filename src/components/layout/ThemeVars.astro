@@ -1,0 +1,18 @@
+---
+/**
+ * Injects site theme (primary color, radius, heading font) as CSS custom
+ * properties, overriding the defaults in globals.css. Included in both
+ * PublicLayout and AdminLayout <head>. DB-sourced values are validated in
+ * theme.ts before reaching CSS.
+ */
+import { getSettings } from "@/lib/db";
+import { themeCss } from "@/lib/theme";
+
+const settings = await getSettings(Astro.request, Astro.cookies);
+const css = themeCss({
+  primary_color: settings.primary_color,
+  radius: settings.radius,
+  font_heading: settings.font_heading,
+});
+---
+<style is:inline set:html={css} />

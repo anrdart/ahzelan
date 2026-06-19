@@ -6,6 +6,20 @@
 
 @custom-variant dark (&:is(.dark *));
 
+/* ---- Smooth theme transition ----
+   Only active while the toggle adds `.theme-transitioning` to <html>, so we
+   don't clobber every component's own hover/lift timing the rest of the time. */
+html.theme-transitioning *,
+html.theme-transitioning *::before,
+html.theme-transitioning *::after {
+  transition: background-color 320ms ease, color 240ms ease, border-color 320ms ease, fill 320ms ease, stroke 320ms ease !important;
+}
+@media (prefers-reduced-motion: reduce) {
+  html.theme-transitioning *,
+  html.theme-transitioning *::before,
+  html.theme-transitioning *::after { transition: none !important; }
+}
+
 /* ============================================================
    AHZELAN DESIGN TOKENS  (ported from the design system bundle)
    Brand: Royal Blue #2E4191 (from logo) · Teal secondary · Amber accent
@@ -123,63 +137,66 @@
   /* ============================================================
      shadcn/ui semantic vars  → mapped onto Ahzelan brand
      ============================================================ */
-  --background: #ffffff;
+  --background: #FEFCF6;
   --foreground: var(--slate-900);
-  --card: #ffffff;
+  --card: #FFFDF7;
   --card-foreground: var(--slate-900);
-  --popover: #ffffff;
+  --popover: #FFFDF7;
   --popover-foreground: var(--slate-900);
   --primary: var(--royal-700);
   --primary-foreground: #ffffff;
-  --secondary: var(--slate-100);
+  --secondary: #F5F1E8;
   --secondary-foreground: var(--slate-800);
-  --muted: var(--slate-100);
+  --muted: #F5F1E8;
   --muted-foreground: var(--slate-500);
   --accent: var(--royal-50);
   --accent-foreground: var(--royal-700);
   --destructive: #e11d48;
   --destructive-foreground: #ffffff;
-  --border: var(--slate-200);
-  --input: var(--slate-200);
+  --border: #E8E4DA;
+  --input: #E8E4DA;
   --ring: var(--royal-500);
-  --sidebar: #ffffff;
+  --surface-page: #FEFCF6;
+  --surface-card: #FFFDF7;
+  --surface-sunken: #F5F1E8;
+  --sidebar: #FFFDF7;
   --sidebar-foreground: var(--slate-700);
   --sidebar-primary: var(--royal-700);
   --sidebar-primary-foreground: #ffffff;
   --sidebar-accent: var(--royal-50);
   --sidebar-accent-foreground: var(--royal-700);
-  --sidebar-border: var(--slate-200);
+  --sidebar-border: #E8E4DA;
   --sidebar-ring: var(--royal-500);
 }
 
 .dark {
-  --background: var(--slate-950);
-  --foreground: var(--slate-50);
-  --card: var(--slate-900);
-  --card-foreground: var(--slate-50);
-  --popover: var(--slate-900);
-  --popover-foreground: var(--slate-50);
+  --background: #1A1A1A;
+  --foreground: #E8E4DA;
+  --card: #242424;
+  --card-foreground: #E8E4DA;
+  --popover: #242424;
+  --popover-foreground: #E8E4DA;
   --primary: var(--royal-400);
-  --primary-foreground: var(--slate-950);
-  --secondary: var(--slate-800);
-  --secondary-foreground: var(--slate-50);
-  --muted: var(--slate-800);
-  --muted-foreground: var(--slate-400);
-  --accent: var(--slate-800);
-  --accent-foreground: var(--slate-50);
-  --border: var(--slate-800);
-  --input: var(--slate-800);
+  --primary-foreground: #1A1A1A;
+  --secondary: #2A2A2A;
+  --secondary-foreground: #E8E4DA;
+  --muted: #2A2A2A;
+  --muted-foreground: #999999;
+  --accent: #2A2A2A;
+  --accent-foreground: #E8E4DA;
+  --border: #333333;
+  --input: #333333;
   --ring: var(--royal-400);
-  --surface-page: var(--slate-950);
-  --surface-card: var(--slate-900);
-  --surface-sunken: var(--slate-800);
-  --text-body: var(--slate-300);
-  --text-heading: var(--slate-50);
-  --text-muted: var(--slate-400);
-  --ahz-border: var(--slate-800);
-  --sidebar: var(--slate-900);
-  --sidebar-foreground: var(--slate-300);
-  --sidebar-border: var(--slate-800);
+  --surface-page: #1A1A1A;
+  --surface-card: #242424;
+  --surface-sunken: #2A2A2A;
+  --text-body: #B0ACA3;
+  --text-heading: #E8E4DA;
+  --text-muted: #999999;
+  --ahz-border: #333333;
+  --sidebar: #1F1F1F;
+  --sidebar-foreground: #B0ACA3;
+  --sidebar-border: #333333;
 }
 
 /* ============================================================
@@ -191,7 +208,7 @@
      - Page body / section hero tints                   → bg-slate-950
    Then add brand-tinted variants for the royal/amber chips.
    ============================================================ */
-.dark .bg-white { background-color: var(--slate-800) !important; }
+.dark .bg-white { background-color: #2A2A2A !important; }
 /* hero / page tints (originally bg-royal-50/40 or /60) → keep brand feel
    with a deep, subtle royal tint so sections still read as "ahzelan" */
 .dark .bg-royal-50\/40 { background-color: color-mix(in oklab, var(--royal-900) 18%, var(--slate-950)) !important; }
@@ -410,14 +427,17 @@
 .ahz-float:nth-child(3) { animation-delay: 1.2s; }
 .ahz-float:nth-child(4) { animation-delay: 1.8s; }
 
-/* Scroll reveal */
+/* Scroll reveal — hidden only when JS is present (html.js) so no-JS/crawlers still see content */
 .ahz-reveal {
-  opacity: 0;
-  transform: translateY(16px);
   transition: opacity 0.6s var(--ease-out), transform 0.6s var(--ease-out);
   will-change: opacity, transform;
 }
-.ahz-reveal.is-visible {
+html.js .ahz-reveal {
+  opacity: 0;
+  transform: translateY(16px);
+}
+.ahz-reveal.is-visible,
+html:not(.js) .ahz-reveal {
   opacity: 1;
   transform: none;
 }

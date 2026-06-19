@@ -3,8 +3,10 @@ import PublicLayout from "@/layouts/PublicLayout.astro";
 import Icon from "@/components/ui/Icon.astro";
 import { Badge } from "@/components/ui/badge";
 import { getServices } from "@/lib/db";
+import { SITE } from "@/lib/site";
 
 const services = await getServices(Astro.request, Astro.cookies);
+const waHref = `https://wa.me/${SITE.whatsapp}`;
 ---
 <PublicLayout
   title="Layanan"
@@ -33,7 +35,9 @@ const services = await getServices(Astro.request, Astro.cookies);
             <h3 class="text-[21px] font-bold mb-2">{s.title}</h3>
             <p class="text-muted-foreground text-[15px] leading-relaxed mb-5">{s.description}</p>
             <a
-              href={s.title === "Jasa Landing Page" ? "/jasa-pembuatan-landing-page" : "#"}
+              href={s.title === "Jasa Landing Page" ? "/jasa-pembuatan-landing-page" : waHref}
+              target={s.title === "Jasa Landing Page" ? undefined : "_blank"}
+              rel={s.title === "Jasa Landing Page" ? undefined : "noopener"}
               onclick={s.title === "Jasa Landing Page" ? undefined : "window.dispatchEvent(new Event('ahz:open-contact')); return false;"}
               class:list={["inline-flex items-center justify-center w-full h-10 rounded-md text-sm font-semibold font-display transition-all active:scale-[0.97]", s.title === "Jasa Landing Page" ? "bg-primary text-primary-foreground shadow-brand-sm" : "border border-input bg-background hover:bg-accent"]}
             >

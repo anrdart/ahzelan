@@ -23,12 +23,12 @@ export default function DashboardOverview({ stats, articles, activity }: { stats
 
       <div className="grid lg:grid-cols-[1.6fr_1fr] gap-6">
         <div className="flex flex-col gap-6">
-          <div className="bg-white border border-border rounded-2xl">
+          <div className="bg-card border border-border rounded-2xl">
             <div className="px-5 py-4.5 border-b border-border font-display font-bold text-base">Aksi Cepat</div>
             <div className="p-5 grid grid-cols-2 sm:grid-cols-4 gap-3.5">
               {QUICK.map((q) => (
                 <a key={q.label} href={q.href} className="flex flex-col items-center gap-2.5 p-5 bg-surface-page border border-border rounded-xl font-display font-semibold text-[13.5px] hover:bg-royal-50 hover:border-royal-200 transition-colors">
-                  <span className="w-11 h-11 rounded-xl bg-white border border-border text-royal-700 flex items-center justify-center">
+                  <span className="w-11 h-11 rounded-xl bg-card border border-border text-royal-700 flex items-center justify-center">
                     <Icon name={q.icon} size={22} />
                   </span>
                   {q.label}
@@ -37,7 +37,7 @@ export default function DashboardOverview({ stats, articles, activity }: { stats
             </div>
           </div>
 
-          <div className="bg-white border border-border rounded-2xl overflow-hidden">
+          <div className="bg-card border border-border rounded-2xl overflow-hidden">
             <div className="px-5 py-4.5 border-b border-border flex justify-between items-center">
               <span className="font-display font-bold text-base">Artikel Terbaru</span>
               <a href="/admin/articles" className="inline-flex items-center gap-1 text-sm text-muted-foreground hover:text-foreground font-semibold">Semua <Icon name="arrow-right" size={14} /></a>
@@ -62,7 +62,7 @@ export default function DashboardOverview({ stats, articles, activity }: { stats
           </div>
         </div>
 
-        <div className="bg-white border border-border rounded-2xl">
+        <div className="bg-card border border-border rounded-2xl">
           <div className="px-5 py-4.5 border-b border-border font-display font-bold text-base">Aktivitas</div>
           <div className="px-5 py-2.5">
             {activity.map((a, i) => (

@@ -13,9 +13,15 @@ type MediaItem = { id: string; file_name: string; file_url: string; alt_text?: s
 export default function MediaLibrary({ initial, canUpload }: { initial: MediaItem[]; canUpload: boolean }) {
   const [items, setItems] = useState<MediaItem[]>(initial);
   const [sel, setSel] = useState<number>(initial.length ? 0 : -1);
+  const [alt, setAlt] = useState<string>(initial[0]?.alt_text ?? "");
   const [uploading, setUploading] = useState(false);
   const [confirm, setConfirm] = useState(false);
   const fileRef = useRef<HTMLInputElement>(null);
+
+  const select = (i: number) => {
+    setSel(i);
+    setAlt(items[i]?.alt_text ?? "");
+  };
 
   const upload = async (file: File) => {
     if (!canUpload) {
@@ -26,7 +32,7 @@ export default function MediaLibrary({ initial, canUpload }: { initial: MediaIte
     try {
       const fd = new FormData();
       fd.append("file", file);
-      const up = await fetch("/api/admin/media/upload", { method: "POST", body: fd });
+      const up = await fetch("/api/admin/media", { method: "PUT", body: fd });
       if (!up.ok) throw new Error(((await up.json().catch(() => ({}))) as { error?: string }).error || "Upload gagal");
       const meta = (await up.json()) as { file_name: string; url: string; mime_type: string; size: number };
       const rec = await fetch("/api/admin/media", {
@@ -37,11 +43,28 @@ export default function MediaLibrary({ initial, canUpload }: { initial: MediaIte
       const row = (await rec.json()) as MediaItem;
       setItems((it) => [row, ...it]);
       setSel(0);
+      setAlt(row.alt_text ?? "");
       toast.success("Media terupload");
     } catch (e: any) {
       toast.error(e.message);
     } finally {
       setUploading(false);
+    }
+  };
+
+  const saveAlt = async () => {
+    const current = sel >= 0 ? items[sel] : null;
+    if (!current) return;
+    const res = await fetch("/api/admin/media", {
+      method: "PUT",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ id: current.id, alt_text: alt }),
+    });
+    if (res.ok) {
+      setItems((it) => it.map((m) => (m.id === current.id ? { ...m, alt_text: alt } : m)));
+      toast.success("Alt text disimpan");
+    } else {
+      toast.error("Gagal menyimpan alt text");
     }
   };
 
@@ -68,7 +91,7 @@ export default function MediaLibrary({ initial, canUpload }: { initial: MediaIte
           {items.map((m, i) => (
             <button
               key={m.id}
-              onClick={() => setSel(i)}
+              onClick={() => select(i)}
               className="aspect-square rounded-2xl overflow-hidden bg-muted flex items-center justify-center relative"
               style={{ border: "3px solid " + (sel === i ? "var(--brand-primary)" : "transparent") }}
             >
@@ -82,7 +105,7 @@ export default function MediaLibrary({ initial, canUpload }: { initial: MediaIte
         </div>
       </div>
 
-      <div className="bg-white border border-border rounded-2xl p-5 self-start">
+      <div className="bg-card border border-border rounded-2xl p-5 self-start">
         {current ? (
           <>
             <div className="aspect-video rounded-xl overflow-hidden bg-muted flex items-center justify-center mb-4">
@@ -92,7 +115,10 @@ export default function MediaLibrary({ initial, canUpload }: { initial: MediaIte
             <div className="text-[13px] text-muted-foreground mb-4">{current.size ? `${Math.round(current.size / 1024)} KB` : "—"}</div>
             <div className="mb-3.5">
               <Label htmlFor="alt">Alt text</Label>
-              <Input id="alt" defaultValue={current.alt_text ?? ""} className="mt-1.5" />
+              <Input id="alt" value={alt} onChange={(e) => setAlt(e.target.value)} className="mt-1.5" />
+              <Button variant="outline" size="sm" className="mt-2 w-full" onClick={saveAlt}>
+                Simpan Alt Text
+              </Button>
             </div>
             <div className="flex gap-2">
               <Button variant="outline" size="sm" className="flex-1" onClick={() => copyUrl(current.file_url)}>

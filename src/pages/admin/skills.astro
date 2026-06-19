@@ -1,0 +1,29 @@
+---
+import AdminLayout from "@/layouts/AdminLayout.astro";
+import EntityManager from "@/components/admin/EntityManager";
+import { getAdminClient } from "@/lib/supabase";
+export const prerender = false;
+
+const admin = getAdminClient();
+let rows: any[] = [];
+if (admin) {
+  const { data } = await admin.from("skills").select("*").order("sort_order");
+  if (data) rows = data;
+}
+
+const columns = [
+  { key: "label", label: "Label", className: "font-display font-semibold" },
+  { key: "icon", label: "Icon" },
+  { key: "sort_order", label: "Urutan", hideOn: "sm" },
+  { key: "is_visible", label: "Status" },
+];
+const fields = [
+  { type: "text", name: "icon", label: "Icon (Lucide)", placeholder: "star, code, palette…" },
+  { type: "text", name: "label", label: "Label", required: true },
+  { type: "number", name: "sort_order", label: "Urutan" },
+  { type: "boolean", name: "is_visible", label: "Tampilkan" },
+];
+---
+<AdminLayout title="Keahlian" currentPath="/admin/skills" crumbs={[{ label: "Admin", href: "/admin/dashboard" }, { label: "Keahlian" }]}>
+  <EntityManager client:load title="Keahlian" endpoint="/api/admin/skills" rows={rows} columns={columns} searchKeys={["label"]} fields={fields} />
+</AdminLayout>

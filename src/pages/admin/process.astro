@@ -1,0 +1,30 @@
+---
+import AdminLayout from "@/layouts/AdminLayout.astro";
+import EntityManager from "@/components/admin/EntityManager";
+import { getAdminClient } from "@/lib/supabase";
+export const prerender = false;
+
+const admin = getAdminClient();
+let rows: any[] = [];
+if (admin) {
+  const { data } = await admin.from("process_steps").select("*").order("sort_order");
+  if (data) rows = data;
+}
+
+const columns = [
+  { key: "title", label: "Judul", className: "font-display font-semibold" },
+  { key: "icon", label: "Icon" },
+  { key: "sort_order", label: "Urutan", hideOn: "sm" },
+  { key: "is_visible", label: "Status" },
+];
+const fields = [
+  { type: "text", name: "icon", label: "Icon (Lucide)", placeholder: "message-circle, handshake, rocket…" },
+  { type: "text", name: "title", label: "Judul", required: true },
+  { type: "textarea", name: "description", label: "Deskripsi", required: true },
+  { type: "number", name: "sort_order", label: "Urutan" },
+  { type: "boolean", name: "is_visible", label: "Tampilkan" },
+];
+---
+<AdminLayout title="Proses Kerja" currentPath="/admin/process" crumbs={[{ label: "Admin", href: "/admin/dashboard" }, { label: "Proses Kerja" }]}>
+  <EntityManager client:load title="Proses Kerja" endpoint="/api/admin/process" rows={rows} columns={columns} searchKeys={["title"]} fields={fields} />
+</AdminLayout>

@@ -13,6 +13,8 @@ import { Dialog, DialogContent } from "@/components/ui/dialog";
 import { sanitizeHtml } from "@/lib/sanitize";
 import DataTable from "./DataTable";
 import ConfirmDialog from "./ConfirmDialog";
+import RichTextEditor from "./RichTextEditor";
+import MediaPicker from "./MediaPicker";
 
 type Article = {
   id: string;
@@ -130,10 +132,16 @@ export default function ArticleEditor({ initial }: { initial: Article[] }) {
               <Label>Excerpt</Label>
               <Textarea className="mt-1.5" rows={2} value={editing.excerpt ?? ""} onChange={(e) => set("excerpt", e.target.value)} />
             </div>
+            <MediaPicker
+              label="Featured Image"
+              value={editing.featured_image_id ?? null}
+              onChange={(id) => set("featured_image_id", id)}
+            />
             <div>
-              <Label>Konten (HTML)</Label>
-              <Textarea className="mt-1.5 font-mono text-[13px]" rows={14} value={editing.content ?? ""} onChange={(e) => set("content", e.target.value)} placeholder="<h2>...</h2><p>...</p>" />
-              <p className="text-xs text-muted-foreground mt-1.5">Editor markdown/rich-text lengkap bisa dipasang di sini (TipTap/Plate). Pakai HTML dasar untuk sekarang.</p>
+              <Label>Konten</Label>
+              <div className="mt-1.5">
+                <RichTextEditor value={editing.content ?? ""} onChange={(html) => set("content", html)} />
+              </div>
             </div>
             <div>
               <Label>Tags (pisahkan dengan koma)</Label>

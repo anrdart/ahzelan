@@ -11,11 +11,15 @@ export const POST: APIRoute = async ({ request }) => {
   };
   if (!guest_token) return json({ error: "guest_token wajib diisi" }, 400);
 
-  const session = await getOrCreateSession(guest_token);
-  if (!session) return json({ error: "Supabase belum dikonfigurasi" }, 503);
+  try {
+    const session = await getOrCreateSession(guest_token);
+    if (!session) return json({ error: "Supabase belum dikonfigurasi" }, 503);
 
-  await requestLiveChat(session.id, name?.trim() || null, email?.trim() || null);
-  return json({ ok: true, status: "live_requested" });
+    await requestLiveChat(session.id, name?.trim() || null, email?.trim() || null);
+    return json({ ok: true, status: "live_requested" });
+  } catch (e: any) {
+    return json({ error: e?.message || "Gagal meminta live chat" }, 500);
+  }
 };
 
 function json(body: unknown, status = 200) {

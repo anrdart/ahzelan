@@ -2,7 +2,7 @@
  * Server-side chat helpers. Uses service-role admin client (RLS bypass) for
  * writes; reads use the same client. Browser widget talks to /api/chat/* only.
  */
-import { getAdminClient, hasSupabase } from "./supabase";
+import { getAdminClient, checkSupabaseAdmin } from "./supabase";
 import { aiReply, type ChatTurn } from "./ai";
 import { FALLBACK_FAQS } from "./fallback";
 
@@ -35,7 +35,7 @@ function client() {
  *  Returns null on hard failure (env missing). Throws with detail if the
  *  table/query is broken so the API surfaces a useful message. */
 export async function getOrCreateSession(token: string): Promise<ChatSession | null> {
-  if (!hasSupabase) return null;
+  if (!checkSupabaseAdmin()) return null;
   const c = client();
   const { data: existing, error: selErr } = await c
     .from("chat_sessions")
@@ -61,14 +61,14 @@ export async function getOrCreateSession(token: string): Promise<ChatSession | n
 }
 
 export async function getSession(token: string): Promise<ChatSession | null> {
-  if (!hasSupabase) return null;
+  if (!checkSupabaseAdmin()) return null;
   const c = client();
   const { data } = await c.from("chat_sessions").select("*").eq("guest_token", token).maybeSingle();
   return (data as ChatSession) ?? null;
 }
 
 export async function getMessages(token: string): Promise<ChatMessage[]> {
-  if (!hasSupabase) return [];
+  if (!checkSupabaseAdmin()) return [];
   const c = client();
   const { data: sess } = await c.from("chat_sessions").select("id").eq("guest_token", token).maybeSingle();
   if (!sess) return [];
@@ -93,7 +93,10 @@ async function addMessage(
     .insert({ session_id: sessionId, role, actor, content })
     .select()
     .single();
-  if (error) return null;
+  if (error) {
+    console.error("chat addMessage insert failed:", error.message);
+    return null;
+  }
   return data as ChatMessage;
 }
 
@@ -126,8 +129,8 @@ export async function replyToGuest(
       await addMessage(sessionId, "assistant", "bot", ai);
       return { reply: ai, reason: "ai" };
     }
-  } catch {
-    // fall through to FAQ/fallback
+  } catch (e) {
+    console.error("aiReply failed, falling back to FAQ:", e);
   }
 
   // FAQ fallback: simple keyword match against the faqs table/fallback.
@@ -203,7 +206,7 @@ export async function markGuestRead(token: string): Promise<void> {
 
 /** List all sessions for the admin panel, newest-activity first. */
 export async function listSessions(): Promise<(ChatSession & { last_message?: string })[]> {
-  if (!hasSupabase) return [];
+  if (!checkSupabaseAdmin()) return [];
   const c = client();
   const { data } = await c
     .from("chat_sessions")
@@ -215,7 +218,7 @@ export async function listSessions(): Promise<(ChatSession & { last_message?: st
 
 /** Total unread across sessions (for sidebar badge). */
 export async function totalUnread(): Promise<number> {
-  if (!hasSupabase) return 0;
+  if (!checkSupabaseAdmin()) return 0;
   const c = client();
   const { count } = await c
     .from("chat_sessions")

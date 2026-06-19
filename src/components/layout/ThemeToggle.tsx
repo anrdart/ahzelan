@@ -9,19 +9,25 @@ import { useEffect, useState } from "react";
  *  - Smooth easing for the swap (~500ms)
  */
 export default function ThemeToggle() {
-  const [dark, setDark] = useState(false);
-  const [mounted, setMounted] = useState(false);
+  // Lazy-init from the actual applied theme (theme-init.js already set .dark
+  // before hydration) so the icon + label match pre-paint, no flash.
+  const [dark, setDark] = useState(() =>
+    typeof document !== "undefined" && document.documentElement.classList.contains("dark"),
+  );
 
   useEffect(() => {
-    setMounted(true);
     setDark(document.documentElement.classList.contains("dark"));
   }, []);
 
   const toggle = () => {
     const next = !dark;
     setDark(next);
-    document.documentElement.classList.toggle("dark", next);
+    const root = document.documentElement;
+    // Enable the global color transition only for the duration of the swap.
+    root.classList.add("theme-transitioning");
+    root.classList.toggle("dark", next);
     try { localStorage.setItem("ahz-theme", next ? "dark" : "light"); } catch (e) {}
+    window.setTimeout(() => root.classList.remove("theme-transitioning"), 360);
   };
 
   return (
@@ -32,13 +38,13 @@ export default function ThemeToggle() {
       title={dark ? "Mode terang" : "Mode gelap"}
       className="ahz-theme-toggle relative inline-flex h-10 w-10 items-center justify-center rounded-full border border-input bg-background hover:bg-accent transition-colors overflow-hidden"
     >
-      <span className={`ahz-theme-icon sun ${mounted && dark ? "out" : "in"}`} aria-hidden="true">
+      <span className={`ahz-theme-icon sun ${dark ? "out" : "in"}`} aria-hidden="true">
         <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-amber-500">
           <circle cx="12" cy="12" r="4" fill="currentColor" stroke="none" />
           <path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41" />
         </svg>
       </span>
-      <span className={`ahz-theme-icon moon ${mounted && dark ? "in" : "out"}`} aria-hidden="true">
+      <span className={`ahz-theme-icon moon ${dark ? "in" : "out"}`} aria-hidden="true">
         <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor" stroke="none" className="text-slate-200">
           <path d="M21 12.79A9 9 0 1 1 11.21 3a7 7 0 0 0 9.79 9.79z" />
         </svg>
