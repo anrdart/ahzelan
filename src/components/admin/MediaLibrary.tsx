@@ -4,6 +4,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Icon } from "@/components/ui/icon";
+import SmartImage from "@/components/ui/SmartImage";
 import { Upload, Copy, Trash2, Loader2 } from "lucide-react";
 import { toast } from "sonner";
 import ConfirmDialog from "./ConfirmDialog";
@@ -96,7 +97,12 @@ export default function MediaLibrary({ initial, canUpload }: { initial: MediaIte
               style={{ border: "3px solid " + (sel === i ? "var(--brand-primary)" : "transparent") }}
             >
               {m.file_url ? (
-                <img src={m.file_url} alt={m.alt_text ?? m.file_name} loading="lazy" className="w-full h-full object-cover" />
+                <SmartImage
+                  src={m.file_url}
+                  alt={m.alt_text ?? m.file_name}
+                  wrapperClassName="absolute inset-0"
+                  className="w-full h-full object-cover"
+                />
               ) : (
                 <Icon name="image" size={28} className="text-royal-500" />
               )}
@@ -109,7 +115,7 @@ export default function MediaLibrary({ initial, canUpload }: { initial: MediaIte
         {current ? (
           <>
             <div className="aspect-video rounded-xl overflow-hidden bg-muted flex items-center justify-center mb-4">
-              {current.file_url ? <img src={current.file_url} alt="" className="w-full h-full object-cover" /> : <Icon name="image" size={36} className="text-royal-500" />}
+              {current.file_url ? <SmartImage src={current.file_url} alt="" wrapperClassName="w-full h-full" className="w-full h-full object-cover" /> : <Icon name="image" size={36} className="text-royal-500" />}
             </div>
             <div className="font-display font-bold text-[15px] mb-1 break-all">{current.file_name}</div>
             <div className="text-[13px] text-muted-foreground mb-4">{current.size ? `${Math.round(current.size / 1024)} KB` : "—"}</div>

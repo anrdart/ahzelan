@@ -1,0 +1,30 @@
+---
+/**
+ * Lazy image with shimmer skeleton, for .astro pages (no hydration).
+ * Mirrors the React SmartImage: wrapper carries the shimmer; the inline onload
+ * flips .ahz-loaded so the image fades in and the shimmer stops.
+ * (Inline event handler is allowed by the CSP `script-src 'unsafe-inline'`.)
+ */
+interface Props {
+  src: string;
+  alt?: string;
+  wrapperClass?: string;
+  imgClass?: string;
+  width?: number;
+  height?: number;
+  eager?: boolean;
+}
+const { src, alt = "", wrapperClass = "", imgClass = "", width, height, eager = false } = Astro.props;
+---
+<div class:list={["ahz-img-wrap ahz-skeleton", wrapperClass]}>
+  <img
+    src={src}
+    alt={alt}
+    width={width}
+    height={height}
+    loading={eager ? "eager" : "lazy"}
+    decoding="async"
+    class:list={["ahz-img", imgClass]}
+    onload="this.closest('.ahz-img-wrap')?.classList.add('ahz-loaded')"
+  />
+</div>

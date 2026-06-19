@@ -1,6 +1,7 @@
 "use client";
 import { useState } from "react";
 import { Dialog, DialogContent, DialogTitle } from "@/components/ui/dialog";
+import SmartImage from "@/components/ui/SmartImage";
 
 type Item = { image_url: string; caption: string | null; aspect_w: number; aspect_h: number };
 
@@ -22,13 +23,11 @@ export default function GaleriGrid({ items }: { items: Item[] }) {
               className="group relative overflow-hidden rounded-2xl border border-border bg-muted text-left"
               style={span}
             >
-              <img
+              <SmartImage
                 src={it.image_url}
                 alt={it.caption ?? ""}
-                width={it.aspect_w}
-                height={it.aspect_h}
-                loading="lazy"
-                className="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                wrapperClassName="absolute inset-0"
+                className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
               />
               <div className="absolute inset-x-0 bottom-0 h-1/2 bg-black/40" />
               <div className="absolute bottom-0 left-0 right-0 p-3.5">

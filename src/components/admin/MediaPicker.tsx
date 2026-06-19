@@ -6,6 +6,8 @@ import { Input } from "@/components/ui/input";
 import { ImageIcon, X, Upload, Search, Loader2 } from "lucide-react";
 import { toast } from "sonner";
 import { cn } from "@/lib/utils";
+import SmartImage from "@/components/ui/SmartImage";
+import { Skeleton } from "@/components/ui/skeleton";
 
 type MediaItem = { id: string; file_name: string; file_url: string; mime_type?: string };
 
@@ -86,10 +88,11 @@ export default function MediaPicker({
       <div className="flex items-center gap-3">
         {value && selectedUrl ? (
           <div className="relative group">
-            <img
+            <SmartImage
               src={selectedUrl}
               alt=""
-              className="w-16 h-16 rounded-lg object-cover border border-border"
+              wrapperClassName="w-16 h-16 rounded-lg border border-border overflow-hidden"
+              className="w-full h-full object-cover"
             />
             <button
               type="button"
@@ -134,8 +137,10 @@ export default function MediaPicker({
           </div>
           <div className="flex-1 overflow-y-auto">
             {loading ? (
-              <div className="flex items-center justify-center py-12 text-muted-foreground">
-                <Loader2 size={20} className="animate-spin" />
+              <div className="grid grid-cols-4 sm:grid-cols-5 md:grid-cols-6 gap-2">
+                {Array.from({ length: 18 }).map((_, i) => (
+                  <Skeleton key={i} className="aspect-square rounded-lg" />
+                ))}
               </div>
             ) : filtered.length === 0 ? (
               <p className="text-center text-muted-foreground py-12">Belum ada media.</p>
@@ -151,7 +156,7 @@ export default function MediaPicker({
                       m.id === value ? "border-primary ring-2 ring-primary/20" : "border-border",
                     )}
                   >
-                    <img src={m.file_url} alt={m.file_name} className="w-full h-full object-cover" loading="lazy" />
+                    <SmartImage src={m.file_url} alt={m.file_name} wrapperClassName="w-full h-full" className="w-full h-full object-cover" />
                   </button>
                 ))}
               </div>

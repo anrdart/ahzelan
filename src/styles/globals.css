@@ -499,3 +499,39 @@ html:not(.js) .ahz-reveal {
   color: var(--text-muted);
   font-style: italic;
 }
+
+/* ---- Lazy-load skeleton + image fade-in ----
+   Wrapper (.ahz-img-wrap) carries a shimmer until the inner <img> loads, then
+   gets .ahz-loaded and the shimmer stops + image fades in. Works with no JS
+   for .astro (inline onload) and with React state in islands. */
+@keyframes ahz-shimmer {
+  from { background-position: 200% 0; }
+  to { background-position: -200% 0; }
+}
+.ahz-skeleton {
+  background-color: var(--surface-sunken);
+  background-image: linear-gradient(
+    90deg,
+    transparent 0%,
+    color-mix(in srgb, var(--surface-card) 55%, transparent) 50%,
+    transparent 100%
+  );
+  background-size: 200% 100%;
+  background-repeat: no-repeat;
+  animation: ahz-shimmer 1.5s linear infinite;
+}
+.ahz-img-wrap .ahz-img {
+  opacity: 0;
+  transition: opacity 0.45s ease;
+}
+.ahz-img-wrap.ahz-loaded {
+  background-image: none;
+  animation: none;
+}
+.ahz-img-wrap.ahz-loaded .ahz-img {
+  opacity: 1;
+}
+@media (prefers-reduced-motion: reduce) {
+  .ahz-skeleton { animation: none; }
+  .ahz-img-wrap .ahz-img { transition: none; }
+}
