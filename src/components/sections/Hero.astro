@@ -47,8 +47,8 @@ const floats = [
         </ul>
       </div>
 
-      <!-- RIGHT: portrait + playful floating cards -->
-      <div class="relative order-1 lg:order-2 max-w-md mx-auto lg:max-w-none lg:mx-0 w-full">
+      <!-- RIGHT: portrait + playful floating cards (hidden on mobile) -->
+      <div class="relative order-1 lg:order-2 hidden lg:block max-w-md mx-auto lg:max-w-none lg:mx-0 w-full">
         <div class="relative aspect-[4/5] rounded-[32px] overflow-hidden shadow-xl border-[6px] border-white bg-royal-50">
           <img src="/img/ahzelan-portrait.webp" alt="Ahzelan" loading="eager" class="w-full h-full object-cover object-[center_20%]" />
         </div>
@@ -56,11 +56,11 @@ const floats = [
         {floats.map((f) => (
           <div
             aria-hidden="true"
-            class:list={["ahz-float absolute hidden sm:flex items-center gap-2 bg-white border border-border rounded-xl px-2.5 py-1.5 shadow-md font-bold text-[12.5px] font-display whitespace-nowrap"]}
+            class:list={["ahz-float absolute hidden sm:flex items-center gap-1.5 bg-white border border-border rounded-lg px-2 py-1 shadow-md font-bold text-[11px] font-display whitespace-nowrap"]}
             style={`top:${f.top};${f.left ? `left:${f.left};` : ""}${f.right ? `right:${f.right};` : ""}`}
           >
-            <span class="w-6 h-6 rounded-md bg-brand-soft text-primary flex items-center justify-center">
-              <Icon name={f.icon} size={12} />
+            <span class="w-5 h-5 rounded bg-brand-soft text-primary flex items-center justify-center">
+              <Icon name={f.icon} size={10} />
             </span>
             {f.label}
           </div>
