@@ -1,7 +1,7 @@
 ---
 import AdminLayout from "@/layouts/AdminLayout.astro";
 import DashboardOverview from "@/components/admin/DashboardOverview";
-import { getAdminClient, hasSupabase } from "@/lib/supabase";
+import { getAdminClient } from "@/lib/supabase";
 export const prerender = false;
 
 const admin = getAdminClient();
@@ -12,39 +12,73 @@ let stats: { label: string; value: string; icon: string; delta: string }[] = [
   { label: "FAQ", value: "16", icon: "message-circle", delta: "Semua tampil" },
 ];
 let articles: { id: string; title: string; category: string; date: string; status: "Published" | "Draft" }[] = [];
-let activity: { icon: string; text: string; time: string }[] = [
-  { icon: "square-pen", text: "Edit hero homepage", time: "5 menit lalu" },
-  { icon: "image", text: "Upload 3 gambar ke Media", time: "1 jam lalu" },
-  { icon: "palette", text: "Ubah warna primary", time: "3 jam lalu" },
-  { icon: "file-text", text: "Publish artikel baru", time: "Kemarin" },
-];
+let activity: { icon: string; text: string; time: string }[] = [];
+
+function relativeTime(date: string) {
+  const diff = Date.now() - new Date(date).getTime();
+  const m = Math.floor(diff / 60000);
+  if (m < 1) return "Baru saja";
+  if (m < 60) return `${m} menit lalu`;
+  const h = Math.floor(m / 60);
+  if (h < 24) return `${h} jam lalu`;
+  const d = Math.floor(h / 24);
+  if (d === 1) return "Kemarin";
+  return `${d} hari lalu`;
+}
+
+const actionMap: Record<string, { icon: string; verb: string }> = {
+  create: { icon: "plus", verb: "Tambah" },
+  update: { icon: "pencil", verb: "Edit" },
+  delete: { icon: "trash-2", verb: "Hapus" },
+  chat_reply: { icon: "message-circle", verb: "Balas chat" },
+};
+
+const entityLabel: Record<string, string> = {
+  articles: "artikel", services: "layanan", packages: "paket", testimonials: "testimoni",
+  faqs: "FAQ", recommendations: "rekomendasi", media: "media", pages: "halaman",
+  sections: "seksi", navigation_items: "navigasi", site_settings: "pengaturan",
+  chat_sessions: "chat", gallery_items: "galeri", bio_links: "bio link",
+  process_steps: "proses", skills: "keahlian",
+};
 
 if (admin) {
-  const [pages, media, art, faq] = await Promise.all([
+  const [pages, media, art, faq, drafts] = await Promise.all([
     admin.from("pages").select("id", { count: "exact", head: true }).eq("status", "published"),
     admin.from("media").select("id", { count: "exact", head: true }),
-    admin.from("articles").select("id, title, category, status, published_at", { count: "exact" }).order("published_at", { ascending: false }).limit(5),
+    admin.from("articles").select("id, title, category, status, published_at, created_at").order("created_at", { ascending: false }).limit(5),
     admin.from("faqs").select("id", { count: "exact", head: true }).eq("is_visible", true),
+    admin.from("articles").select("id", { count: "exact", head: true }).eq("status", "draft"),
   ]);
   stats = [
     { label: "Halaman", value: String(pages.count ?? 0), icon: "file-text", delta: "Published" },
     { label: "Media", value: String(media.count ?? 0), icon: "image", delta: "+0 minggu ini" },
-    { label: "Artikel", value: String(art.count ?? 0), icon: "file-text", delta: `${(art.data ?? []).filter((a: any) => a.status === "draft").length} draft` },
+    { label: "Artikel", value: String(art.count ?? 0), icon: "file-text", delta: `${drafts.count ?? 0} draft` },
     { label: "FAQ", value: String(faq.count ?? 0), icon: "message-circle", delta: "Semua tampil" },
   ];
   articles = (art.data ?? []).map((a: any) => ({
     id: a.id, title: a.title, category: a.category,
-    date: a.published_at ? new Date(a.published_at).toLocaleDateString("id-ID", { day: "numeric", month: "short", year: "numeric" }) : "—",
+    date: (a.published_at ?? a.created_at) ? new Date(a.published_at ?? a.created_at).toLocaleDateString("id-ID", { day: "numeric", month: "short", year: "numeric" }) : "—",
     status: a.status === "published" ? "Published" : "Draft",
   }));
+
+  const { data: logs } = await admin
+    .from("activity_logs")
+    .select("action, entity_type, created_at")
+    .order("created_at", { ascending: false })
+    .limit(10);
+  activity = (logs ?? []).map((l: any) => {
+    const a = actionMap[l.action] ?? { icon: "activity", verb: l.action };
+    const e = entityLabel[l.entity_type] ?? l.entity_type;
+    return { icon: a.icon, text: `${a.verb} ${e}`, time: relativeTime(l.created_at) };
+  });
 }
 
-const hasDb = hasSupabase;
+const hasAdmin = !!admin;
 ---
 <AdminLayout title="Dashboard" currentPath="/admin/dashboard" crumbs={[{ label: "Admin", href: "/admin/dashboard" }, { label: "Dashboard" }]}>
-  {!hasDb && (
+  {!hasAdmin && (
     <div class="mb-6 p-4 rounded-xl border border-amber-200 bg-amber-50 text-amber-600 text-sm">
-      <strong>Mode fallback:</strong> Public Supabase env belum di-set, jadi data di dashboard ini adalah placeholder. Set <code class="font-mono">PUBLIC_SUPABASE_URL</code> + anon key di <code class="font-mono">.env</code> untuk data live.
+      <strong>Mode fallback:</strong> Supabase service-role key belum di-set, jadi data di dashboard ini adalah placeholder. Set <code class="font-mono">SUPABASE_SERVICE_ROLE_KEY</code> + <code class="font-mono">PUBLIC_SUPABASE_URL</code> di <code class="font-mono">.env</code> / Cloudflare secrets untuk data live.
     </div>
   )}
   <DashboardOverview client:load stats={stats} articles={articles} activity={activity} />

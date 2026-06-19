@@ -13,16 +13,16 @@ import { SITE, SOCIALS, BRAND_UNITS } from "@/lib/site";
         </p>
         <div class="flex gap-2.5">
           {[
-            { name: "instagram", href: SOCIALS.instagram.href },
-            { name: "youtube", href: SOCIALS.youtube.href },
-            { name: "send", href: SOCIALS.telegram.href },
-            { name: "mail", href: `mailto:${SITE.email}` },
+            { name: "instagram", label: "Instagram", href: SOCIALS.instagram.href },
+            { name: "youtube", label: "YouTube", href: SOCIALS.youtube.href },
+            { name: "send", label: "Telegram", href: SOCIALS.telegram.href },
+            { name: "mail", label: "Email", href: `mailto:${SITE.email}` },
           ].map((s) => (
             <a
               href={s.href}
               target="_blank"
               rel="noopener"
-              aria-label={s.name}
+              aria-label={s.label}
               class="w-9 h-9 inline-flex items-center justify-center rounded-lg bg-slate-800 text-white hover:bg-primary transition-colors"
             >
               <Icon name={s.name} size={17} />

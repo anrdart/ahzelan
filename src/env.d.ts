@@ -23,6 +23,9 @@ type ENV = {
   PUBLIC_SITE_URL?: string;
   PUBLIC_WHATSAPP_NUMBER?: string;
   PUBLIC_CONTACT_EMAIL?: string;
+  ZAI_API_KEY?: string;
+  ZAI_MODEL?: string;
+  ZAI_API_URL?: string;
 };
 
 type Runtime = import("@astrojs/cloudflare").Runtime<ENV>;

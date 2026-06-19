@@ -18,8 +18,8 @@ export default defineConfig({
   adapter: cloudflare({
     imageService: "compile",
     platformProxy: { enabled: true },
-    // Cloudflare Pages mode (no wrangler worker entry needed; deploy via Pages).
-    // For pure Workers deploy, set mode: 'directory' and configure wrangler.toml.
+    // Deploys as a Cloudflare Worker via wrangler (wrangler.toml). `bun run deploy`
+    // runs `astro build && wrangler deploy`. No `mode` needed for the current setup.
   }),
   integrations: [react(), sitemap()],
   vite: {

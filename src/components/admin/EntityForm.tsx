@@ -7,8 +7,9 @@ import { Switch } from "@/components/ui/switch";
 import { Select, SelectTrigger, SelectValue, SelectContent, SelectItem } from "@/components/ui/select";
 import { toast } from "sonner";
 import { Save, Loader2 } from "lucide-react";
+import MediaPicker from "./MediaPicker";
 
-export type FieldType = "text" | "textarea" | "number" | "url" | "select" | "boolean" | "list" | "json";
+export type FieldType = "text" | "textarea" | "number" | "url" | "select" | "boolean" | "list" | "json" | "media";
 export type Field = {
   /** one of FieldType; typed as string so un-annotated .astro literals don't widen-fail */
   type: string;
@@ -19,6 +20,8 @@ export type Field = {
   help?: string;
   rows?: number;
   options?: { value: string; label: string }[];
+  /** media fields: also write the picked media URL into this sibling field (e.g. "image_url") */
+  urlTarget?: string;
 };
 
 export default function EntityForm({
@@ -44,23 +47,46 @@ export default function EntityForm({
     });
     return v;
   });
+  // Raw textarea text for json fields, kept separate so typing isn't re-stringified each render.
+  const [jsonRaw, setJsonRaw] = useState<Record<string, string>>(() => {
+    const r: Record<string, string> = {};
+    fields.forEach((f) => {
+      if (f.type === "json") r[f.name] = JSON.stringify(values[f.name] ?? [], null, 2);
+    });
+    return r;
+  });
   const [busy, setBusy] = useState(false);
 
   const set = (k: string, v: any) => setValues((s) => ({ ...s, [k]: v }));
 
   const submit = async (e: React.FormEvent) => {
     e.preventDefault();
+
+    // Validate required fields across all field types (native required only covers <input>).
+    for (const f of fields) {
+      if (!f.required) continue;
+      const val = values[f.name];
+      const empty =
+        val === undefined || val === null || val === "" ||
+        (Array.isArray(val) && val.filter((x) => String(x).trim()).length === 0);
+      if (empty) {
+        toast.error(`"${f.label}" wajib diisi`);
+        return;
+      }
+    }
+
     setBusy(true);
     try {
       const payload: Record<string, any> = { ...values };
-      fields.forEach((f) => {
-        if (f.type === "list" && Array.isArray(payload[f.name])) payload[f.name] = payload[f.name];
-        if (f.type === "json") {
-          if (typeof payload[f.name] === "string") {
-            try { payload[f.name] = JSON.parse(payload[f.name]); } catch { payload[f.name] = []; }
-          }
+      for (const f of fields) {
+        if (f.type === "list" && Array.isArray(payload[f.name])) {
+          payload[f.name] = payload[f.name].filter((x: string) => String(x).trim());
         }
-      });
+        if (f.type === "json") {
+          try { payload[f.name] = JSON.parse(jsonRaw[f.name] ?? "[]"); }
+          catch { toast.error(`"${f.label}" bukan JSON valid`); setBusy(false); return; }
+        }
+      }
       const method = values.id ? "PUT" : "POST";
       const res = await fetch(endpoint, {
         method,
@@ -82,7 +108,7 @@ export default function EntityForm({
   };
 
   return (
-    <form onSubmit={submit} className="bg-white border border-border rounded-2xl p-6 space-y-5">
+    <form onSubmit={submit} className="bg-card border border-border rounded-2xl p-6 space-y-5">
       {fields.map((f) => {
         const id = `f-${f.name}`;
         if (f.type === "boolean") {
@@ -93,6 +119,22 @@ export default function EntityForm({
                 {f.help && <p className="text-xs text-muted-foreground mt-1">{f.help}</p>}
               </div>
               <Switch id={id} checked={!!values[f.name]} onCheckedChange={(v) => set(f.name, v)} />
+            </div>
+          );
+        }
+        if (f.type === "media") {
+          return (
+            <div key={f.name}>
+              <MediaPicker
+                label={f.label + (f.required ? " *" : "")}
+                value={values[f.name] ?? null}
+                valueUrl={f.urlTarget ? values[f.urlTarget] ?? null : null}
+                onChange={(mediaId, url) => {
+                  set(f.name, mediaId);
+                  if (f.urlTarget) set(f.urlTarget, url ?? "");
+                }}
+              />
+              {f.help && <p className="text-xs text-muted-foreground mt-1.5">{f.help}</p>}
             </div>
           );
         }
@@ -153,8 +195,8 @@ export default function EntityForm({
               <Textarea
                 id={id}
                 rows={6}
-                value={JSON.stringify(values[f.name] ?? [], null, 2)}
-                onChange={(e) => set(f.name, e.target.value)}
+                value={jsonRaw[f.name] ?? ""}
+                onChange={(e) => setJsonRaw((s) => ({ ...s, [f.name]: e.target.value }))}
                 className="mt-1.5 font-mono text-[13px]"
               />
               {f.help && <p className="text-xs text-muted-foreground mt-1.5">{f.help}</p>}

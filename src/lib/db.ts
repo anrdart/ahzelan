@@ -2,7 +2,7 @@
  * Data accessors. Returns Supabase data if env is configured, otherwise
  * the static fallback. Each function is safe to call from any Astro page.
  */
-import { hasSupabase, getServerClient } from "./supabase";
+import { checkSupabase, getServerClient } from "./supabase";
 import type {
   Service,
   Package,
@@ -11,6 +11,10 @@ import type {
   Recommendation,
   Article,
   SiteSetting,
+  GalleryItem,
+  BioLink,
+  ProcessStep,
+  Skill,
 } from "./types";
 import { sanitizeHtml } from "./sanitize";
 import {
@@ -21,10 +25,14 @@ import {
   FALLBACK_RECOMMENDATIONS,
   FALLBACK_ARTICLES,
   FALLBACK_SETTINGS,
+  FALLBACK_GALLERY,
+  FALLBACK_BIO,
+  FALLBACK_PROCESS,
+  FALLBACK_SKILLS,
 } from "./fallback";
 
 function clientOrNull(request: Request, cookies: Parameters<typeof getServerClient>[1]) {
-  return hasSupabase ? getServerClient(request, cookies) : null;
+  return checkSupabase() ? getServerClient(request, cookies) : null;
 }
 
 export async function getServices(request: Request, cookies: Parameters<typeof getServerClient>[1]): Promise<Service[]> {
@@ -81,7 +89,7 @@ export async function getArticles(request: Request, cookies: Parameters<typeof g
     if (data?.length) return (data as Article[]).map((a) => ({ ...a, content: sanitizeHtml(a.content) }));
   }
   const sorted = [...FALLBACK_ARTICLES].sort(
-    (a, b) => new Date(b.published_at!).getTime() - new Date(a.published_at!).getTime(),
+    (a, b) => new Date(b.published_at ?? b.created_at ?? 0).getTime() - new Date(a.published_at ?? a.created_at ?? 0).getTime(),
   );
   return limit ? sorted.slice(0, limit) : sorted;
 }
@@ -107,4 +115,40 @@ export async function getSettings(request: Request, cookies: Parameters<typeof g
     if (data) return data as SiteSetting;
   }
   return FALLBACK_SETTINGS;
+}
+
+export async function getGalleryItems(request: Request, cookies: Parameters<typeof getServerClient>[1]): Promise<GalleryItem[]> {
+  const c = clientOrNull(request, cookies);
+  if (c) {
+    const { data } = await c.from("gallery_items").select("*").eq("is_visible", true).order("sort_order");
+    if (data?.length) return data as GalleryItem[];
+  }
+  return FALLBACK_GALLERY as GalleryItem[];
+}
+
+export async function getBioLinks(request: Request, cookies: Parameters<typeof getServerClient>[1]): Promise<BioLink[]> {
+  const c = clientOrNull(request, cookies);
+  if (c) {
+    const { data } = await c.from("bio_links").select("*").eq("is_visible", true).order("sort_order");
+    if (data?.length) return data as BioLink[];
+  }
+  return FALLBACK_BIO as BioLink[];
+}
+
+export async function getProcessSteps(request: Request, cookies: Parameters<typeof getServerClient>[1]): Promise<ProcessStep[]> {
+  const c = clientOrNull(request, cookies);
+  if (c) {
+    const { data } = await c.from("process_steps").select("*").eq("is_visible", true).order("sort_order");
+    if (data?.length) return data as ProcessStep[];
+  }
+  return FALLBACK_PROCESS as ProcessStep[];
+}
+
+export async function getSkills(request: Request, cookies: Parameters<typeof getServerClient>[1]): Promise<Skill[]> {
+  const c = clientOrNull(request, cookies);
+  if (c) {
+    const { data } = await c.from("skills").select("*").eq("is_visible", true).order("sort_order");
+    if (data?.length) return data as Skill[];
+  }
+  return FALLBACK_SKILLS as Skill[];
 }

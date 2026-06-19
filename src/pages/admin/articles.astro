@@ -8,7 +8,7 @@ export const prerender = false;
 const admin = getAdminClient();
 let rows = FALLBACK_ARTICLES as any[];
 if (admin) {
-  const { data } = await admin.from("articles").select("*").order("published_at", { ascending: false });
+  const { data } = await admin.from("articles").select("*").order("created_at", { ascending: false });
   if (data) rows = data;
 }
 ---

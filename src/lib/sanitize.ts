@@ -34,7 +34,7 @@ export function sanitizeHtml(input: string): string {
     .replace(/<\s*(script|style|iframe|object|embed)[^>]*\/?>/gi, "");
 
   // Walk every tag; drop disallowed tags & attributes.
-  html = html.replace(/<(\/?)([a-zA-Z][a-zA-Z0-9]*)((?:[^>"']|"[^"]*"|'[^']*')*)>/g, (match, slash, tag, attrs) => {
+  html = html.replace(/<(\/?)([a-zA-Z][a-zA-Z0-9]*)((?:[^>"']|"[^"]*"|'[^']*')*)>/g, (_match, slash, tag, attrs) => {
     const name = tag.toLowerCase();
     if (!ALLOWED_TAGS.has(name)) return "";
     if (slash) return `</${name}>`;

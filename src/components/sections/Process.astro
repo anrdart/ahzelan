@@ -1,7 +1,7 @@
 ---
 import Icon from "@/components/ui/Icon.astro";
-import { FALLBACK_PROCESS } from "@/lib/fallback";
-const steps = FALLBACK_PROCESS;
+import { getProcessSteps } from "@/lib/db";
+const steps = await getProcessSteps(Astro.request, Astro.cookies);
 ---
 <section class="py-12">
   <div class="container-ahz">
@@ -18,7 +18,7 @@ const steps = FALLBACK_PROCESS;
             <span class="absolute -top-2 -right-2 w-[26px] h-[26px] rounded-full bg-primary text-white text-[13px] font-bold font-display flex items-center justify-center">{i + 1}</span>
           </div>
           <h3 class="text-lg font-bold mb-1.5">{s.title}</h3>
-          <p class="text-sm text-muted-foreground leading-snug">{s.desc}</p>
+          <p class="text-sm text-muted-foreground leading-snug">{s.description}</p>
         </div>
       ))}
     </div>

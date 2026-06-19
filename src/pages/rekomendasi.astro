@@ -22,7 +22,7 @@ const items = await getRecommendations(Astro.request, Astro.cookies);
     <div class="container-ahz">
       <RekomendasiFilter client:visible items={items.map((r) => ({
         id: r.id, title: r.title, category: r.category, description: r.description ?? "",
-        link: r.link_url ?? "#", badge: r.badge ?? undefined,
+        link: r.link_url ?? "#", badge: r.badge ?? undefined, icon: r.icon ?? null,
       }))} />
     </div>
   </section>

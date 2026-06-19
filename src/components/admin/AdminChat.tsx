@@ -70,9 +70,12 @@ export default function AdminChat({ initialSessions }: { initialSessions: Sess[]
       .on("postgres_changes", { event: "INSERT", schema: "public", table: "chat_messages" }, (p: any) => {
         const m = p.new as Msg;
         if (m.session_id === activeId) {
-          setMsgs((prev) => (prev.some((x) => x.id === m.id) ? prev : [...prev, m]));
+          setMsgs((prev) => {
+            if (prev.some((x) => x.id === m.id)) return prev;
+            // Insert in order by created_at
+            return [...prev, m].sort((a, b) => a.created_at.localeCompare(b.created_at));
+          });
         }
-        // refresh session list (new message bumps last_message_at / unread)
         refreshSessions();
       })
       .on("postgres_changes", { event: "*", schema: "public", table: "chat_sessions" }, () => refreshSessions())
@@ -81,13 +84,30 @@ export default function AdminChat({ initialSessions }: { initialSessions: Sess[]
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [activeId]);
 
-  // Poll fallback if realtime unavailable (every 15s)
+  // Poll fallback if realtime unavailable (every 15s): sessions + active thread.
   useEffect(() => {
-    const id = setInterval(refreshSessions, 15000);
+    const id = setInterval(() => {
+      refreshSessions();
+      if (activeId) {
+        fetch(`/api/admin/chat/${activeId}`)
+          .then((r) => readJson<{ messages?: Msg[] }>(r))
+          .then((d) => {
+            if (d.messages) setMsgs((prev) => {
+              if (prev.length === d.messages!.length) return prev;
+              return d.messages!;
+            });
+          })
+          .catch(() => {});
+      }
+    }, 15000);
     return () => clearInterval(id);
-  }, []);
+  }, [activeId]);
 
+  // Debounce session refresh so a burst of realtime events doesn't spam the API.
+  const refreshTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
   const refreshSessions = async () => {
+    if (refreshTimer.current) return;
+    refreshTimer.current = setTimeout(() => { refreshTimer.current = null; }, 3000);
     try {
       const r = await fetch("/api/admin/chat/sessions", { cache: "no-store" });
       if (!r.ok) return;
@@ -108,8 +128,12 @@ export default function AdminChat({ initialSessions }: { initialSessions: Sess[]
       });
       const body = await readJson<Msg & { error?: string }>(r);
       if (!r.ok) throw new Error(body.error || "Gagal");
-      setMsgs((prev) => [...prev, body]);
+      // Don't optimistically append — realtime INSERT will deliver it.
+      // Just force a thread refresh to ensure it shows immediately.
       setReply("");
+      const tr = await fetch(`/api/admin/chat/${activeId}`);
+      const td = await readJson<{ messages?: Msg[] }>(tr);
+      if (td.messages) setMsgs(td.messages);
       refreshSessions();
     } catch (e: any) {
       toast.error(e.message);
@@ -132,7 +156,7 @@ export default function AdminChat({ initialSessions }: { initialSessions: Sess[]
   return (
     <div className="grid lg:grid-cols-[320px_1fr] gap-5 h-[calc(100vh-220px)] min-h-[480px]">
       {/* Session list */}
-      <div className="flex flex-col bg-white dark:bg-slate-900 border border-border rounded-2xl overflow-hidden">
+      <div className="flex flex-col bg-card border border-border rounded-2xl overflow-hidden">
         <div className="px-4 py-3 border-b border-border flex items-center justify-between">
           <span className="font-display font-bold text-sm">Obrolan</span>
           {pending.length > 0 && <Badge variant="accent">{pending.length} menunggu</Badge>}
@@ -170,7 +194,7 @@ export default function AdminChat({ initialSessions }: { initialSessions: Sess[]
       </div>
 
       {/* Thread */}
-      <div className="flex flex-col bg-white dark:bg-slate-900 border border-border rounded-2xl overflow-hidden">
+      <div className="flex flex-col bg-card border border-border rounded-2xl overflow-hidden">
         {active ? (
           <>
             <div className="px-4 py-3 border-b border-border flex items-center justify-between">

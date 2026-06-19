@@ -35,10 +35,11 @@ export const POST: APIRoute = async ({ request, clientAddress }) => {
   if (!verdict.allowed) {
     // Still store the (rejected) guest message + canned reply for context,
     // but DON'T call the LLM. actor stays 'bot' so it reads like the bot's refusal.
-    await admin.from("chat_messages").insert([
+    const { error: blockErr } = await admin.from("chat_messages").insert([
       { session_id: session.id, role: "user", actor: "guest", content: content.trim().slice(0, 500) },
       { session_id: session.id, role: "assistant", actor: "bot", content: verdict.message },
     ]);
+    if (blockErr) console.error("chat blocked-path insert failed:", blockErr.message);
     return json({
       reply: verdict.message,
       reason: verdict.reason,
@@ -52,7 +53,10 @@ export const POST: APIRoute = async ({ request, clientAddress }) => {
   const { error: insErr } = await admin
     .from("chat_messages")
     .insert({ session_id: session.id, role: "user", actor: "guest", content: clean });
-  if (insErr) return json({ error: insErr.message }, 400);
+  if (insErr) {
+    console.error("chat message insert failed:", insErr.message);
+    return json({ error: "Gagal menyimpan pesan" }, 400);
+  }
 
   const history = await getMessages(guest_token);
   const { reply, reason } = await replyToGuest(session.id, session.bot_mode, history, clean);
@@ -64,7 +68,8 @@ export const POST: APIRoute = async ({ request, clientAddress }) => {
     messages: await getMessages(guest_token),
   });
   } catch (e: any) {
-    return json({ error: e?.message || "Gagal memproses pesan" }, 500);
+    console.error("chat message handler failed:", e?.message);
+    return json({ error: "Gagal memproses pesan" }, 500);
   }
 };
 

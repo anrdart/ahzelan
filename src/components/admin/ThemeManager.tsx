@@ -4,7 +4,6 @@ import { Button } from "@/components/ui/button";
 import { Switch } from "@/components/ui/switch";
 import { Separator } from "@/components/ui/separator";
 import { Badge } from "@/components/ui/badge";
-import { Icon } from "@/components/ui/icon";
 import { Check, MessageCircle, Loader2 } from "lucide-react";
 import { toast } from "sonner";
 
@@ -21,13 +20,13 @@ const RADII = [
   { name: "Sedang", val: "12px" },
   { name: "Membulat", val: "20px" },
 ];
-const FONTS = ["Plus Jakarta Sans", "Inter", "Geist"];
+const FONTS = ["Plus Jakarta Sans", "Inter"];
 
-export default function ThemeManager({ initial }: { initial?: { primary_color?: string } }) {
+export default function ThemeManager({ initial }: { initial?: { primary_color?: string; radius?: string } }) {
   const [primary, setPrimary] = useState(
     PRIMARIES.find((p) => p.val.toLowerCase() === (initial?.primary_color ?? "").toLowerCase()) ?? PRIMARIES[0],
   );
-  const [radius, setRadius] = useState(RADII[1]);
+  const [radius, setRadius] = useState(RADII.find((r) => r.val === initial?.radius) ?? RADII[1]);
   const [font, setFont] = useState(FONTS[0]);
   const [dark, setDark] = useState(false);
   const [busy, setBusy] = useState(false);
@@ -38,7 +37,7 @@ export default function ThemeManager({ initial }: { initial?: { primary_color?: 
       const res = await fetch("/api/admin/settings", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ primary_color: primary.val, font_heading: font }),
+        body: JSON.stringify({ primary_color: primary.val, font_heading: font, radius: radius.val }),
       });
       if (!res.ok) throw new Error(((await res.json().catch(() => ({}))) as { error?: string }).error || "Gagal");
       toast.success("Tema tersimpan");
@@ -61,7 +60,7 @@ export default function ThemeManager({ initial }: { initial?: { primary_color?: 
   return (
     <div className="grid lg:grid-cols-[minmax(0,360px)_1fr] gap-6">
       {/* Controls */}
-      <div className="bg-white border border-border rounded-2xl p-6">
+      <div className="bg-card border border-border rounded-2xl p-6">
         <div className="mb-5">
           <div className="font-display font-bold text-sm mb-2.5">Warna Primary</div>
           <div className="flex gap-2.5 flex-wrap">

@@ -1,5 +1,5 @@
 import type { APIRoute } from "astro";
-import { getOrCreateSession, getMessages, markGuestRead, type ChatSession } from "@/lib/chat";
+import { getOrCreateSession, getMessages, markGuestRead } from "@/lib/chat";
 export const prerender = false;
 
 /**

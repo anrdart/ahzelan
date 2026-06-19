@@ -2,7 +2,8 @@
 import PublicLayout from "@/layouts/PublicLayout.astro";
 import { Badge } from "@/components/ui/badge";
 import GaleriGrid from "@/components/public/GaleriGrid";
-import { FALLBACK_GALLERY } from "@/lib/fallback";
+import { getGalleryItems } from "@/lib/db";
+const items = await getGalleryItems(Astro.request, Astro.cookies);
 ---
 <PublicLayout title="Galeri" description="Galeri foto & aktivitas Ahzelan." currentPath="/galeri">
   <section class="relative overflow-hidden pt-14 pb-10 text-center bg-royal-50/40">
@@ -14,7 +15,7 @@ import { FALLBACK_GALLERY } from "@/lib/fallback";
   </section>
   <section class="pb-20">
     <div class="container-ahz">
-      <GaleriGrid client:visible items={FALLBACK_GALLERY} />
+      <GaleriGrid client:visible items={items} />
     </div>
   </section>
 </PublicLayout>

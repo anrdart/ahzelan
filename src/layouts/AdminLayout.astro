@@ -5,6 +5,7 @@
  */
 import "@/styles/globals.css";
 import AdminShell from "@/components/admin/AdminShell";
+import ThemeVars from "@/components/layout/ThemeVars.astro";
 import { Toaster } from "@/components/ui/sonner";
 
 interface Props {
@@ -23,6 +24,10 @@ const userEmail = Astro.locals.user?.email ?? "admin@ahzelan.com";
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="robots" content="noindex,nofollow" />
     <link rel="icon" type="image/svg+xml" href="/brand/ahzelan-mark.svg" />
+    {/* Pre-paint: apply saved theme before stylesheet, avoids FOUC */}
+    <script is:inline src="/theme-init.js"></script>
+    {/* Brand CSS vars (primary/radius/font) from site_settings. */}
+    <ThemeVars />
     <title>{title} — Admin Ahzelan</title>
   </head>
   <body class="min-h-screen bg-surface-page text-foreground">

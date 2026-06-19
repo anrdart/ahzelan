@@ -21,6 +21,10 @@ export type SiteSetting = {
   default_seo_description: string | null;
   og_image_url: string | null;
   analytics_script: string | null;
+  /** Admin email allowlist (jsonb in DB). Fail-closed auth: empty = no admins. */
+  whitelist_admins: string[] | null;
+  /** CSS length string, e.g. "12px". Applied site-wide as `--radius`. */
+  radius: string | null;
   updated_at: string;
 };
 
@@ -139,6 +143,8 @@ export type Recommendation = {
   category: string;
   description: string;
   image_id: string | null;
+  /** Lucide icon name; falls back to a title/category heuristic when null. */
+  icon: string | null;
   link_url: string | null;
   badge: string | null;
   sort_order: number;
@@ -160,6 +166,53 @@ export type Article = {
   seo_description: string | null;
   status: "draft" | "published";
   published_at: string | null;
+  created_at: string;
+  updated_at: string;
+};
+
+export type GalleryItem = {
+  id: string;
+  media_id: string | null;
+  image_url: string;
+  caption: string | null;
+  aspect_w: number;
+  aspect_h: number;
+  sort_order: number;
+  is_visible: boolean;
+  created_at: string;
+  updated_at: string;
+};
+
+export type BioLink = {
+  id: string;
+  label: string;
+  sub_text: string | null;
+  icon: string;
+  href: string;
+  is_accent: boolean;
+  sort_order: number;
+  is_visible: boolean;
+  created_at: string;
+  updated_at: string;
+};
+
+export type ProcessStep = {
+  id: string;
+  icon: string;
+  title: string;
+  description: string;
+  sort_order: number;
+  is_visible: boolean;
+  created_at: string;
+  updated_at: string;
+};
+
+export type Skill = {
+  id: string;
+  icon: string;
+  label: string;
+  sort_order: number;
+  is_visible: boolean;
   created_at: string;
   updated_at: string;
 };

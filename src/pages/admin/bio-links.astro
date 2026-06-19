@@ -1,0 +1,33 @@
+---
+import AdminLayout from "@/layouts/AdminLayout.astro";
+import EntityManager from "@/components/admin/EntityManager";
+import { getAdminClient } from "@/lib/supabase";
+export const prerender = false;
+
+const admin = getAdminClient();
+let rows: any[] = [];
+if (admin) {
+  const { data } = await admin.from("bio_links").select("*").order("sort_order");
+  if (data) rows = data;
+}
+
+const columns = [
+  { key: "label", label: "Label", className: "font-display font-semibold" },
+  { key: "icon", label: "Icon" },
+  { key: "href", label: "URL", hideOn: "sm" },
+  { key: "is_accent", label: "Aksen" },
+  { key: "is_visible", label: "Status" },
+];
+const fields = [
+  { type: "text", name: "label", label: "Label", required: true },
+  { type: "text", name: "sub_text", label: "Sub Text" },
+  { type: "text", name: "icon", label: "Icon (Lucide)", placeholder: "link, globe, shopping-bag…" },
+  { type: "url", name: "href", label: "URL", required: true },
+  { type: "boolean", name: "is_accent", label: "Tampilan Aksen", help: "Highlight warna berbeda" },
+  { type: "number", name: "sort_order", label: "Urutan" },
+  { type: "boolean", name: "is_visible", label: "Tampilkan" },
+];
+---
+<AdminLayout title="Bio Link" currentPath="/admin/bio-links" crumbs={[{ label: "Admin", href: "/admin/dashboard" }, { label: "Bio Link" }]}>
+  <EntityManager client:load title="Bio Link" endpoint="/api/admin/bio-links" rows={rows} columns={columns} searchKeys={["label", "href"]} fields={fields} />
+</AdminLayout>

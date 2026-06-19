@@ -56,7 +56,7 @@ export default function SettingsForm({ initial }: { initial: Partial<Settings> }
   };
 
   return (
-    <form onSubmit={save} className="bg-white border border-border rounded-2xl p-6 max-w-3xl space-y-5">
+    <form onSubmit={save} className="bg-card border border-border rounded-2xl p-6 max-w-3xl space-y-5">
       <div>
         <h2 className="font-display font-bold text-lg mb-3">Umum</h2>
         <div className="grid sm:grid-cols-2 gap-4">

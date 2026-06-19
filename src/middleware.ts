@@ -19,7 +19,7 @@ export const onRequest = defineMiddleware(async (context, next) => {
   context.locals.user = user;
 
   const isAdminPage = path.startsWith("/admin") && path !== "/admin/login";
-  const isAdminApi = path.startsWith("/api/admin");
+  const isAdminApi = path.startsWith("/api/admin") && path !== "/api/admin/login";
 
   if ((isAdminPage || isAdminApi) && !user) {
     if (isAdminApi) {
@@ -36,5 +36,33 @@ export const onRequest = defineMiddleware(async (context, next) => {
     return context.redirect("/admin/dashboard");
   }
 
-  return next();
+  const res = await next();
+
+  // Security headers (applied to every HTML/document response).
+  const ct = res.headers.get("content-type") ?? "";
+  if (ct.includes("text/html")) {
+    res.headers.set("X-Content-Type-Options", "nosniff");
+    res.headers.set("X-Frame-Options", "SAMEORIGIN");
+    res.headers.set("Referrer-Policy", "strict-origin-when-cross-origin");
+    res.headers.set("Permissions-Policy", "camera=(), microphone=(), geolocation=()");
+    res.headers.set("Strict-Transport-Security", "max-age=31536000; includeSubDomains");
+    res.headers.set(
+      "Content-Security-Policy",
+      [
+        "default-src 'self'",
+        "base-uri 'self'",
+        "object-src 'none'",
+        "frame-ancestors 'self'",
+        // Astro/React islands + inline theme-init need inline+eval; tighten later with nonces.
+        "script-src 'self' 'unsafe-inline' 'unsafe-eval'",
+        "style-src 'self' 'unsafe-inline'",
+        "img-src 'self' data: blob: https:",
+        "font-src 'self' data:",
+        "connect-src 'self' https:",
+        "form-action 'self'",
+      ].join("; "),
+    );
+  }
+
+  return res;
 });

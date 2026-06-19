@@ -26,6 +26,7 @@ export const FALLBACK_SETTINGS: Partial<SiteSetting> = {
   primary_color: "#2E4191",
   secondary_color: "#06b6d4",
   accent_color: "#f59e0b",
+  radius: "12px",
   footer_text: "Ahzelan merupakan salah satu makhluk hidup yang tumbuh dan berkembang di era digital.",
   default_seo_title: "Ahzelan — Bantu Kamu Tumbuh di Era Digital",
   default_seo_description:
@@ -251,12 +252,12 @@ export const FALLBACK_FAQS: Faq[] = [
 ];
 
 export const FALLBACK_RECOMMENDATIONS: Recommendation[] = [
-  { id: "r-1", title: "Niagahoster", category: "Hosting", description: "Hosting cepat & murah buat website pertama kamu.", image_id: null, link_url: "#", badge: "Rekomendasi", sort_order: 0, ...base },
-  { id: "r-2", title: "Elementor Pro", category: "Plugin", description: "Page builder WordPress paling fleksibel.", image_id: null, link_url: "#", badge: null, sort_order: 1, ...base },
-  { id: "r-3", title: "Midtrans", category: "Payment", description: "Payment gateway lengkap buat toko online.", image_id: null, link_url: "#", badge: null, sort_order: 2, ...base },
-  { id: "r-4", title: "Canva Pro", category: "Tools", description: "Desain konten marketing tanpa ribet.", image_id: null, link_url: "#", badge: "Favorit", sort_order: 3, ...base },
-  { id: "r-5", title: "Landing Kit", category: "Template", description: "Template landing page siap pakai & convert.", image_id: null, link_url: "https://naon.id", badge: null, sort_order: 4, ...base },
-  { id: "r-6", title: "Ubersuggest", category: "Tools", description: "Riset keyword & analisa SEO kompetitor.", image_id: null, link_url: "#", badge: null, sort_order: 5, ...base },
+  { id: "r-1", title: "Niagahoster", category: "Hosting", description: "Hosting cepat & murah buat website pertama kamu.", image_id: null, icon: "server", link_url: "#", badge: "Rekomendasi", sort_order: 0, ...base },
+  { id: "r-2", title: "Elementor Pro", category: "Plugin", description: "Page builder WordPress paling fleksibel.", image_id: null, icon: "puzzle", link_url: "#", badge: null, sort_order: 1, ...base },
+  { id: "r-3", title: "Midtrans", category: "Payment", description: "Payment gateway lengkap buat toko online.", image_id: null, icon: "credit-card", link_url: "#", badge: null, sort_order: 2, ...base },
+  { id: "r-4", title: "Canva Pro", category: "Tools", description: "Desain konten marketing tanpa ribet.", image_id: null, icon: "palette", link_url: "#", badge: "Favorit", sort_order: 3, ...base },
+  { id: "r-5", title: "Landing Kit", category: "Template", description: "Template landing page siap pakai & convert.", image_id: null, icon: "layout-template", link_url: "https://naon.id", badge: null, sort_order: 4, ...base },
+  { id: "r-6", title: "Ubersuggest", category: "Tools", description: "Riset keyword & analisa SEO kompetitor.", image_id: null, icon: "search", link_url: "#", badge: null, sort_order: 5, ...base },
 ];
 
 const article = (
@@ -342,35 +343,35 @@ export const FALLBACK_ARTICLES: Article[] = [
 ];
 
 export const FALLBACK_PROCESS = [
-  { icon: "message-circle", title: "Konsultasi", desc: "Ngobrol dulu soal kebutuhan & target kamu. Gratis, santai." },
-  { icon: "credit-card", title: "Deal & Pembayaran", desc: "Sepakat scope dan harga, DP 50% buat mulai pengerjaan." },
-  { icon: "wrench", title: "Pengerjaan", desc: "Aku kerjain sesuai brief, kamu pantau progresnya." },
-  { icon: "zap", title: "Launch & Support", desc: "Online, revisi sesuai jatah, plus support setelah jadi." },
+  { id: "fp-1", icon: "message-circle", title: "Konsultasi", description: "Ngobrol dulu soal kebutuhan & target kamu. Gratis, santai.", sort_order: 1, is_visible: true, created_at: "2025-01-01T00:00:00Z", updated_at: "2025-01-01T00:00:00Z" },
+  { id: "fp-2", icon: "credit-card", title: "Deal & Pembayaran", description: "Sepakat scope dan harga, DP 50% buat mulai pengerjaan.", sort_order: 2, is_visible: true, created_at: "2025-01-01T00:00:00Z", updated_at: "2025-01-01T00:00:00Z" },
+  { id: "fp-3", icon: "wrench", title: "Pengerjaan", description: "Aku kerjain sesuai brief, kamu pantau progresnya.", sort_order: 3, is_visible: true, created_at: "2025-01-01T00:00:00Z", updated_at: "2025-01-01T00:00:00Z" },
+  { id: "fp-4", icon: "zap", title: "Launch & Support", description: "Online, revisi sesuai jatah, plus support setelah jadi.", sort_order: 4, is_visible: true, created_at: "2025-01-01T00:00:00Z", updated_at: "2025-01-01T00:00:00Z" },
 ];
 
 export const FALLBACK_SKILLS = [
-  { icon: "globe", label: "Website" },
-  { icon: "trending-up", label: "SEO" },
-  { icon: "type", label: "Copywriting" },
-  { icon: "megaphone", label: "Advertising" },
-  { icon: "layout-template", label: "Landing Page" },
+  { id: "fs-1", icon: "globe", label: "Website", sort_order: 1, is_visible: true, created_at: "2025-01-01T00:00:00Z", updated_at: "2025-01-01T00:00:00Z" },
+  { id: "fs-2", icon: "trending-up", label: "SEO", sort_order: 2, is_visible: true, created_at: "2025-01-01T00:00:00Z", updated_at: "2025-01-01T00:00:00Z" },
+  { id: "fs-3", icon: "type", label: "Copywriting", sort_order: 3, is_visible: true, created_at: "2025-01-01T00:00:00Z", updated_at: "2025-01-01T00:00:00Z" },
+  { id: "fs-4", icon: "megaphone", label: "Advertising", sort_order: 4, is_visible: true, created_at: "2025-01-01T00:00:00Z", updated_at: "2025-01-01T00:00:00Z" },
+  { id: "fs-5", icon: "layout-template", label: "Landing Page", sort_order: 5, is_visible: true, created_at: "2025-01-01T00:00:00Z", updated_at: "2025-01-01T00:00:00Z" },
 ];
 
 export const FALLBACK_BIO = [
-  { icon: "message-circle", label: "Chat WhatsApp", sub: "Konsultasi gratis", accent: true, href: "wa" },
-  { icon: "layout-template", label: "Jasa Landing Page", sub: "Lihat paket & harga", href: "/jasa-pembuatan-landing-page" },
-  { icon: "package", label: "Naon.id — Produk Digital", sub: "Produk premium digital marketing", href: "https://naon.id" },
-  { icon: "graduation-cap", label: "Berilmu.id — Belajar", sub: "Belajar digital marketing", href: "https://berilmu.id" },
-  { icon: "file-text", label: "Blog & Tutorial", sub: "Artikel & tips", href: "/blog" },
-  { icon: "instagram", label: "Instagram", sub: "@ahzelanx", href: "https://instagram.com/ahzelanx" },
-  { icon: "youtube", label: "YouTube", sub: "@ahzelanx", href: "https://youtube.com/@ahzelanx" },
-  { icon: "send", label: "Telegram", sub: "@jadinaonn", href: "https://t.me/jadinaonn" },
+  { id: "fb-1", icon: "message-circle", label: "Chat WhatsApp", sub_text: "Konsultasi gratis", is_accent: true, href: "wa", sort_order: 1, is_visible: true, created_at: "2025-01-01T00:00:00Z", updated_at: "2025-01-01T00:00:00Z" },
+  { id: "fb-2", icon: "layout-template", label: "Jasa Landing Page", sub_text: "Lihat paket & harga", is_accent: false, href: "/jasa-pembuatan-landing-page", sort_order: 2, is_visible: true, created_at: "2025-01-01T00:00:00Z", updated_at: "2025-01-01T00:00:00Z" },
+  { id: "fb-3", icon: "package", label: "Naon.id — Produk Digital", sub_text: "Produk premium digital marketing", is_accent: false, href: "https://naon.id", sort_order: 3, is_visible: true, created_at: "2025-01-01T00:00:00Z", updated_at: "2025-01-01T00:00:00Z" },
+  { id: "fb-4", icon: "graduation-cap", label: "Berilmu.id — Belajar", sub_text: "Belajar digital marketing", is_accent: false, href: "https://berilmu.id", sort_order: 4, is_visible: true, created_at: "2025-01-01T00:00:00Z", updated_at: "2025-01-01T00:00:00Z" },
+  { id: "fb-5", icon: "file-text", label: "Blog & Tutorial", sub_text: "Artikel & tips", is_accent: false, href: "/blog", sort_order: 5, is_visible: true, created_at: "2025-01-01T00:00:00Z", updated_at: "2025-01-01T00:00:00Z" },
+  { id: "fb-6", icon: "instagram", label: "Instagram", sub_text: "@ahzelanx", is_accent: false, href: "https://instagram.com/ahzelanx", sort_order: 6, is_visible: true, created_at: "2025-01-01T00:00:00Z", updated_at: "2025-01-01T00:00:00Z" },
+  { id: "fb-7", icon: "youtube", label: "YouTube", sub_text: "@ahzelanx", is_accent: false, href: "https://youtube.com/@ahzelanx", sort_order: 7, is_visible: true, created_at: "2025-01-01T00:00:00Z", updated_at: "2025-01-01T00:00:00Z" },
+  { id: "fb-8", icon: "send", label: "Telegram", sub_text: "@jadinaonn", is_accent: false, href: "https://t.me/jadinaonn", sort_order: 8, is_visible: true, created_at: "2025-01-01T00:00:00Z", updated_at: "2025-01-01T00:00:00Z" },
 ];
 
 export const FALLBACK_GALLERY = [
-  { src: "/img/ahzelan-portrait.webp", caption: "Ahzelan", w: 4, h: 5 },
-  { src: "/img/ahzelan-di-dieng-1.webp", caption: "Di Dieng", w: 4, h: 5 },
-  { src: "/img/naon.webp", caption: "Naon.id", w: 16, h: 9 },
-  { src: "/img/sandaran-digital.webp", caption: "Sandaran Digital", w: 16, h: 4 },
-  { src: "/img/berilmu.webp", caption: "Berilmu.id", w: 16, h: 9 },
+  { id: "fg-1", media_id: null, image_url: "/img/ahzelan-portrait.webp", caption: "Ahzelan", aspect_w: 4, aspect_h: 5, sort_order: 1, is_visible: true, created_at: "2025-01-01T00:00:00Z", updated_at: "2025-01-01T00:00:00Z" },
+  { id: "fg-2", media_id: null, image_url: "/img/ahzelan-di-dieng-1.webp", caption: "Di Dieng", aspect_w: 4, aspect_h: 5, sort_order: 2, is_visible: true, created_at: "2025-01-01T00:00:00Z", updated_at: "2025-01-01T00:00:00Z" },
+  { id: "fg-3", media_id: null, image_url: "/img/naon.webp", caption: "Naon.id", aspect_w: 16, aspect_h: 9, sort_order: 3, is_visible: true, created_at: "2025-01-01T00:00:00Z", updated_at: "2025-01-01T00:00:00Z" },
+  { id: "fg-4", media_id: null, image_url: "/img/sandaran-digital.webp", caption: "Sandaran Digital", aspect_w: 16, aspect_h: 4, sort_order: 4, is_visible: true, created_at: "2025-01-01T00:00:00Z", updated_at: "2025-01-01T00:00:00Z" },
+  { id: "fg-5", media_id: null, image_url: "/img/berilmu.webp", caption: "Berilmu.id", aspect_w: 16, aspect_h: 9, sort_order: 5, is_visible: true, created_at: "2025-01-01T00:00:00Z", updated_at: "2025-01-01T00:00:00Z" },
 ];
