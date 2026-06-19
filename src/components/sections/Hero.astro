@@ -56,11 +56,11 @@ const floats = [
         {floats.map((f) => (
           <div
             aria-hidden="true"
-            class:list={["ahz-float absolute hidden sm:flex items-center gap-2.5 bg-white border border-border rounded-2xl px-3.5 py-2.5 shadow-md font-bold text-sm font-display whitespace-nowrap"]}
+            class:list={["ahz-float absolute hidden sm:flex items-center gap-2 bg-white border border-border rounded-xl px-2.5 py-1.5 shadow-md font-bold text-[12.5px] font-display whitespace-nowrap"]}
             style={`top:${f.top};${f.left ? `left:${f.left};` : ""}${f.right ? `right:${f.right};` : ""}`}
           >
-            <span class="w-7 h-7 rounded-lg bg-brand-soft text-primary flex items-center justify-center">
-              <Icon name={f.icon} size={14} />
+            <span class="w-6 h-6 rounded-md bg-brand-soft text-primary flex items-center justify-center">
+              <Icon name={f.icon} size={12} />
             </span>
             {f.label}
           </div>
